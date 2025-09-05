@@ -2,6 +2,14 @@
 
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Button from "../components/ui/Button.vue";
+import {useRoute, useRouter} from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+
+function goToLogin() {
+  router.push("/login")
+}
 </script>
 
 <template>
@@ -17,11 +25,11 @@ import Button from "../components/ui/Button.vue";
 
       </div>
       <div class="btn-first">
-       <Button variant="primary" @click="handleRegister">
+       <Button variant="primary" >
   Sign Up
 </Button>
 
-        <Button variant="secondary" @click="handleLogin">
+        <Button variant="secondary" @click="goToLogin">
   Login
 </Button>
       </div>
