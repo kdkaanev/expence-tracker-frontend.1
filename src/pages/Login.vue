@@ -5,9 +5,18 @@ import { ref } from "vue";
 import Button from "../components/ui/Button.vue";
 const email = ref("");
 const password = ref("");
+import { useAuthStore} from "../store/authStore.js";
 
+const authStore = useAuthStore();
+const formData = ref({
+  email: "",
+  password: ""
+})
 const onLogin = () => {
-  console.log( "Login", email.value, password.value);
+  formData.value.email = email.value;
+  formData.value.password = password.value;
+  authStore.login(formData.value);
+  console.log(formData.value);
 }
 </script>
 

@@ -1,6 +1,5 @@
 <template>
   <Home />
-  <Login />
 </template>
 <script setup>
 import Home from "../pages/Home.vue";
