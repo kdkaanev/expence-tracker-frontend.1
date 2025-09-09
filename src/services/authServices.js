@@ -6,7 +6,7 @@ export async function loginUser(LoginData) {
     const email = LoginData.email;
     const password = LoginData.password;
     try {
-        const response = await axiosET.post('/api/auth/jwt/create', { email, password });
+        const response = await axiosET.post('/api/auth/jwt/create/', { email, password });
 
         const accessToken = response.data.access;
         const refreshToken = response.data.refresh;

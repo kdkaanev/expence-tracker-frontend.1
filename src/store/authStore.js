@@ -11,7 +11,7 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.accessToken,
+    isAuthenticated: (state) => !!this.state.accessToken,
   },
 
   actions: {
@@ -51,10 +51,10 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async checkAuth() {
-      if (!this.accessToken) return false
+      if (!this.state.accessToken) return false
       try {
         const response = await axiosET.get("/api/auth/users/me/", {
-          headers: { Authorization: `Bearer ${this.accessToken}` },
+          headers: { Authorization: `Bearer ${this.state.accessToken}` },
         })
         this.user = response.data
         return true
