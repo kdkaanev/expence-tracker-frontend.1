@@ -1,15 +1,16 @@
 <script setup>
-import MainLayout from "./layouts/MainLayout.vue";
-import {useAuthStore} from "./store/authStore.js";
+import { onMounted } from "vue"
+import { useAuthStore } from "./store/authStore.js"
+import MainLayout from "./layouts/MainLayout.vue"
 
-const authStore = useAuthStore();
+const authStore = useAuthStore()
 
-authStore.initAuth()
+// Инициализира store само веднъж при стартиране
+onMounted(() => {
+  authStore.initAuth()
+})
 </script>
 
-
 <template>
-
   <router-view />
-
 </template>

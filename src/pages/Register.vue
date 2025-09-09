@@ -2,14 +2,38 @@
     import Inputs from "../components/ui/Inputs.vue";
     import { ref } from "vue";
     import Button from "../components/ui/Button.vue";
+    import {useAuthStore} from "../store/authStore.js";
 
-   
+
     const email = ref("");
     const password = ref("");
-    const confirmPassword = ref("");
+    const re_password = ref("");
+    const authStore = useAuthStore();
+    const formData = ref({
+      email: "",
+      password: "",
+      re_password: ""
+    })
 
-    const onRegister = () => {
-        console.log( "Register", email.value, password.value, confirmPassword.value);
+
+    const onRegister = async () => {
+        formData.value.email = email.value
+        formData.value.password = password.value
+        formData.value.re_password = re_password.value
+        if(formData.value.password !== formData.value.re_password){
+            alert("Passwords do not match")
+            return
+        }
+        try {
+          authStore.register(formData.value)
+          alert("Registered")
+
+          email.value = ""
+          password.value = ""
+          re_password.value = ""
+        }catch (error) {
+          alert("Registration failed")
+        }
     }
 </script>
 
@@ -22,11 +46,11 @@
         <h1>Register</h1>
         <p>Create your account</p>
     
-        <form >
+        <form @submit.prevent="onRegister">
             <Inputs type="email" v-model="email" placeholder="Email" icon="fas fa-envelope" />
             <Inputs type="password" v-model="password" placeholder="Password" icon="fas fa-lock" />
-            <Inputs type="password" v-model="confirmPassword" placeholder="Confirm Password" icon="fas fa-lock" />
-            <Button variant="primary" class="btn-login" @click="onRegister">Register</Button>
+            <Inputs type="password" v-model="re_password" placeholder="Confirm Password" icon="fas fa-lock" />
+            <Button variant="primary" class="btn-login" type="submit">Register</Button>
             <p>Already have an account?<a href="/login">Login</a></p>
         </form>
     </section>

@@ -1,26 +1,21 @@
-import axiosET  from "../config/axiosinstance.js";
-import { jwtDecode } from "jwt-decode";
+import axiosET from "../config/axiosinstance.js"
+import {jwtDecode} from "jwt-decode";  // ✅ default import, без { }
 
+// Login user
+export async function loginUser({ email, password }) {
+  const res = await axiosET.post("api/auth/jwt/create/", { email, password })
 
-export async function loginUser(LoginData) {
-    const email = LoginData.email;
-    const password = LoginData.password;
-    try {
-        const response = await axiosET.post('/api/auth/jwt/create/', { email, password });
+  const accessToken = res.data.access
+  const refreshToken = res.data.refresh
 
-        const accessToken = response.data.access;
-        const refreshToken = response.data.refresh;
-        console.log(response);
+  // Декодираме токена за user info
+  const decodedToken = jwtDecode(accessToken)
 
-        console.log("access:", typeof response.data.access, response.data.access)
-        console.log("refresh:", typeof response.data.refresh, response.data.refresh)
+  return { accessToken, refreshToken, decodedToken }
+}
 
-        const decodedToken = jwtDecode(accessToken);
-
-    return { accessToken, refreshToken, decodedToken };
-    }
-    catch (error) {
-        console.error('Login error:', error);
-        throw error;
-    }
+// Register user
+export async function registerUser({ email, password, re_password }) {
+  const res = await axiosET.post("api/auth/users/", { email, password, re_password })
+  return res.data
 }
