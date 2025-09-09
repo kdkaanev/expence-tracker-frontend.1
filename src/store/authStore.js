@@ -1,13 +1,13 @@
 import { defineStore } from "pinia"
-import { jwtDecode } from "jwt-decode"
-import axiosET from "../config/axiosinstance.js"
-import { loginUser } from "../services/authServices.js"
+import { loginUser, registerUser } from "../services/authServices.js"
 
 export const useAuthStore = defineStore("auth", {
+  id: "auth",
   state: () => ({
     accessToken: null,
     refreshToken: null,
     user: null,
+    isInitialized: false,
   }),
 
   getters: {
@@ -17,13 +17,21 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async login(loginData) {
       const { accessToken, refreshToken, decodedToken } = await loginUser(loginData)
-
       this.accessToken = accessToken
       this.refreshToken = refreshToken
       this.user = decodedToken
 
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
+    },
+
+    async register(registerData) {
+      await registerUser(registerData)        // POST /users/ → 1
+      await this.login({                                   // POST /jwt/create/ → 2
+        email: registerData.email,
+        password: registerData.password,
+      })
+
     },
 
     logout() {
@@ -34,32 +42,27 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("refresh")
     },
 
-    initAuth() {
+    // Инициализация при startup
+    async initAuth() {
+      if (this.isInitialized) return
+      this.isInitialized = true
+
       const access = localStorage.getItem("access")
       const refresh = localStorage.getItem("refresh")
+      if (!access) return
 
-      if (access) {
-        this.accessToken = access
-        this.refreshToken = refresh
-        try {
-          this.user = jwtDecode(access)
-        } catch (e) {
-          console.warn("Invalid token in localStorage, logging out.")
-          this.logout()
-        }
-      }
-    },
+      this.accessToken = access
+      this.refreshToken = refresh
 
-    async checkAuth() {
-      if (!this.accessToken) return false
+      // Извикваме /users/me/ само веднъж при startup
       try {
-        const response = await axiosET.get("/api/auth/users/me/")
+        const res = await import("../config/axiosinstance.js").then(m => m.default)
+        const response = await res.get("/auth/users/me/", {
+          headers: { Authorization: `Bearer ${access}` }
+        })
         this.user = response.data
-        return true
-      } catch (err) {
-        console.error("Auth check failed:", err)
+      } catch {
         this.logout()
-        return false
       }
     },
   },

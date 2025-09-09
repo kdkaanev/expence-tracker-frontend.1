@@ -16,7 +16,7 @@ const onLogin = () => {
   formData.value.email = email.value;
   formData.value.password = password.value;
   authStore.login(formData.value);
-  console.log(formData.value);
+
 }
 </script>
 

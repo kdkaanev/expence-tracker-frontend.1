@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { useAuthStore } from './store/authStore.js'
 
 import App from './App.vue'
 import router from './router'
@@ -24,6 +25,10 @@ app.use(pinia)
 
 app.use(router)
 app.component('font-awesome-icon', FontAwesomeIcon)
+
+const authStore = useAuthStore()
+authStore.initAuth()
+
 app.mount('#app')
 
 
