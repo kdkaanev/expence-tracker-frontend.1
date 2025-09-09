@@ -10,6 +10,9 @@ const route = useRoute();
 function goToLogin() {
   router.push("/login")
 }
+function goToRegister() {
+  router.push("/register")
+}
 </script>
 
 <template>
@@ -25,7 +28,7 @@ function goToLogin() {
 
       </div>
       <div class="btn-first">
-       <Button variant="primary" >
+       <Button variant="primary" @click="goToRegister">
   Sign Up
 </Button>
 
