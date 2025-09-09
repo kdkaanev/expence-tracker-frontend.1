@@ -7,6 +7,10 @@
     const email = ref("");
     const password = ref("");
     const confirmPassword = ref("");
+
+    const onRegister = () => {
+        console.log( "Register", email.value, password.value, confirmPassword.value);
+    }
 </script>
 
 <template>
@@ -22,7 +26,7 @@
             <Inputs type="email" v-model="email" placeholder="Email" icon="fas fa-envelope" />
             <Inputs type="password" v-model="password" placeholder="Password" icon="fas fa-lock" />
             <Inputs type="password" v-model="confirmPassword" placeholder="Confirm Password" icon="fas fa-lock" />
-            <Button variant="primary" class="btn-login">Register</Button>
+            <Button variant="primary" class="btn-login" @click="onRegister">Register</Button>
             <p>Already have an account?<a href="/login">Login</a></p>
         </form>
     </section>
