@@ -2,6 +2,7 @@
 import { onMounted } from "vue"
 import { useAuthStore } from "./store/authStore.js"
 import MainLayout from "./layouts/MainLayout.vue"
+import AuthLayout from "./layouts/AuthLayout.vue"
 
 const authStore = useAuthStore()
 
@@ -12,5 +13,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <router-view />
+  <AuthLayout v-if="authStore.isAuthenticated" />
+  <MainLayout v-else />
 </template>

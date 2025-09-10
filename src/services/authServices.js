@@ -1,5 +1,5 @@
 import axiosET from "../config/axiosinstance.js"
-import {jwtDecode} from "jwt-decode";  // ✅ default import, без { }
+import { jwtDecode } from "jwt-decode";  
 
 // Login user
 export async function loginUser({ email, password }) {
