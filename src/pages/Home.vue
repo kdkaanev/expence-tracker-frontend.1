@@ -8,10 +8,10 @@ const router = useRouter();
 const route = useRoute();
 
 function goToLogin() {
-  router.push("/login")
+  router.push("auth/login")
 }
 function goToRegister() {
-  router.push("/register")
+  router.push("auth/register")
 }
 </script>
 

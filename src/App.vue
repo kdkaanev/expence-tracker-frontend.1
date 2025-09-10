@@ -13,6 +13,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <AuthLayout v-if="authStore.isAuthenticated" />
-  <MainLayout v-else />
+  <router-view />
 </template>

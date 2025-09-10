@@ -1,78 +1,39 @@
-<template>
-    <div class="dashboard">
-        <h1>Finance Dashboard</h1>
-        <div class="dashboard-sections">
-            <section class="pots">
-                <h2>Pots</h2>
-                <!-- Example pots list -->
-                <ul>
-                    <li v-for="pot in pots" :key="pot.id">
-                        {{ pot.name }}: ${{ pot.balance }}
-                    </li>
-                </ul>
-            </section>
-            <section class="transactions">
-                <h2>Transactions</h2>
-                <!-- Example transactions list -->
-                <ul>
-                    <li v-for="tx in transactions" :key="tx.id">
-                        {{ tx.date }} - {{ tx.description }}: ${{ tx.amount }}
-                    </li>
-                </ul>
-            </section>
-            <section class="recurring-bills">
-                <h2>Recurring Bills</h2>
-                <!-- Example recurring bills list -->
-                <ul>
-                    <li v-for="bill in recurringBills" :key="bill.id">
-                        {{ bill.name }}: ${{ bill.amount }} ({{ bill.frequency }})
-                    </li>
-                </ul>
-            </section>
-        </div>
-    </div>
-</template>
-
 <script setup>
-import { ref } from 'vue'
+    import { useAuthStore } from '../store/authStore';
+    import NavBar from './NavBar.vue';
+    const authStore = useAuthStore();
 
-const pots = ref([
-    { id: 1, name: 'Savings', balance: 1200 },
-    { id: 2, name: 'Emergency', balance: 500 },
-])
-
-const transactions = ref([
-    { id: 1, date: '2024-06-01', description: 'Groceries', amount: -50 },
-    { id: 2, date: '2024-06-02', description: 'Salary', amount: 2000 },
-])
-
-const recurringBills = ref([
-    { id: 1, name: 'Netflix', amount: 15, frequency: 'Monthly' },
-    { id: 2, name: 'Gym', amount: 40, frequency: 'Monthly' },
-])
 </script>
+
+<template>
+    
+       
+        <section class="dashboard">
+           
+            <h1>Welcome, {{ authStore.user?.email }}</h1>
+            <div class="card">
+                <h2>Your Profile</h2>
+                <ul>
+                    <li><strong>Email:</strong> {{ authStore.user?.email }}</li>
+                    <li><strong>User ID:</strong> {{ authStore.user?.id }}</li>
+                </ul>
+            </div>
+        </section>
+    
+</template>
 
 <style scoped>
 .dashboard {
-    max-width: 900px;
-    margin: 0 auto;
     padding: 2rem;
 }
-.dashboard-sections {
-    display: flex;
-    gap: 2rem;
-}
-section {
-    flex: 1;
+.card {
     background: #f9f9f9;
-    padding: 1rem;
+    border: 1px;
     border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-h2 {
-    margin-top: 0;
-}
-ul {
-    list-style: none;
-    padding: 0;
-}
+
 </style>
+
