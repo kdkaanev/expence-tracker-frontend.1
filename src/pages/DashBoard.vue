@@ -3,8 +3,17 @@
     import NavBar from './NavBar.vue';
     const authStore = useAuthStore();
     import DonuutChart from '../components/charts/DonuutChart.vue';
+    import LineChart from '../components/charts/LineChart.vue';
 import { Doughnut } from 'vue-chartjs';
-   
+import { icon } from '@fortawesome/fontawesome-svg-core';
+
+
+
+const transactions = [
+    { id: 1, description: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
+    { id: 2, description: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
+    { id: 3, description: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
+];
     const props = defineProps({
     categories: {
       type: Array,
@@ -72,7 +81,7 @@ import { Doughnut } from 'vue-chartjs';
            
            </div>
            <section class="charts">
-            <div style="width: 300px; height: 400px;" >
+            <div  >
                   <DonuutChart
                     :chart-data="chartData"
                     :chart-options="chartOptions"
@@ -80,18 +89,25 @@ import { Doughnut } from 'vue-chartjs';
               </div>
              
             
-            <section class="card">
-                <h2>Balance for September</h2>
-                <p>$500.00</p>
-            </section>
+              <LineChart />
+
+
            </section>
-           <section class="last">
+           <section class="transactions">
             <h2>Last Transactions</h2>
             <ul>
-                <li>Grocery - $50.00</li>
-                <li>Salary - $3,000.00</li>
-                <li>Electricity Bill - $100.00</li>
-                
+                <li v-for="tx in transactions" :key="tx.id" class="transactions-item">
+                  <i :class="tx.icon" class="icon"></i>
+                 <div class="transactions-info">
+                     <span class="description">{{ tx.description }}</span>
+                      <span class="date">{{ tx.date }}</span>
+                  
+                 </div>
+                 <span :class="tx.type === 'income' ? 'income' : 'expense'">
+                    {{ tx.type === 'income' ? '+' : '-' }}${{ tx.amount.toFixed(2) }}
+                  </span>
+                </li>
+              
             </ul>
            </section>
            
@@ -119,7 +135,7 @@ import { Doughnut } from 'vue-chartjs';
     margin-top: 1rem;
 
 }
-.card > h2{
+ h2{
     margin-bottom: 0.5rem;
     font-size: smaller;
     font-weight: light;
@@ -145,10 +161,46 @@ import { Doughnut } from 'vue-chartjs';
     margin: 0 auto;
 }
 .charts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
+.last {
+    margin-top: 2rem;
+
+}
+.transactions{
+    margin-top: 2rem;
+    max-width: 600px;
+  margin: 0 auto;
+}
+.transactions-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+.icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    color: #27ae60;
+}
+.transactions-info {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+   justify-content:start;
+    align-items: center;
+    padding-right: 1rem;
+}
+.date {
+    color: #888;
+    font-size: 0.875rem;
+    margin-left: 1rem;
+    text-align: end;
+}
+
 </style>
 
