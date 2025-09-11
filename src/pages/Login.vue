@@ -27,7 +27,7 @@ const onLogin = () => {
       <p>Welcome back!Please login to your account.</p>
 
       <form @submit.prevent="onLogin">
-        <Inputs type="email" v-model="email" placeholder="Enter your email" icon="fas fa-envelope" />
+        <Inputs type="email" v-model="email" placeholder="Enter your email"  />
         <Inputs type="password" v-model="password" placeholder="Enter your password" icon="fas fa-lock" />
         <Button variant="primary" class="btn-login">Login</Button>
       </form>
