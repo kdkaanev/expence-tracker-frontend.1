@@ -125,7 +125,7 @@ const transactions = [
     border-radius: 8px;
     padding: 1.5rem;
     padding-left: 0.5rem;
-    margin-top: o.5rem;
+    margin-top: 0.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .info {
@@ -138,7 +138,7 @@ const transactions = [
  h2{
     margin-bottom: 0.5rem;
     font-size: smaller;
-    font-weight: light;
+    font-weight: normal;
     
 }
 .card > p{
