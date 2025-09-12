@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axiosET from "../config/axiosinstance";
+import { categoryIcons } from "../services/categoryIcons";
 
 export const useTransactionStore = defineStore("transaction", {
     state: () => ({
@@ -11,6 +12,11 @@ export const useTransactionStore = defineStore("transaction", {
             this.loading = true;
             const response = await axiosET.get("/transactions");
             this.transactions = response.data;
+            this.transactions = this.transactions.map(tx => ({
+                ...tx,
+                icon: categoryIcons[tx.category] || categoryIcons.default,
+            }));
+
             this.loading = false;
         },
         async addTransaction(transactionData) {

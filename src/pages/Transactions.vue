@@ -109,9 +109,13 @@
                 </thead>
                 <tbody>
                     <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+                        <td><i :class="transaction.icon" class="icon"></i></td>
+                        <td>{{ transaction.category }}</td>
                         <td>{{ transaction.date }}</td>
-                         <td>{{ transaction.category }}</td>
                         <td>{{ getCategotyName(transaction.category) }}</td>
+                        <td :class="transaction.type === 'income' ? 'income' : 'expense'">
+                            {{ transaction.type === 'income' ? '+' : '-' }}${{ transaction.amount.toFixed(2) }}
+                        </td>
                        
                         
                         <td class="center">
