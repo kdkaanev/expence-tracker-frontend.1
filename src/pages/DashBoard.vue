@@ -1,6 +1,6 @@
 <script setup>
     import { useAuthStore } from '../store/authStore';
-    import NavBar from './NavBar.vue';
+    import NavBar from '../components/NavBar.vue';
     const authStore = useAuthStore();
     import DonuutChart from '../components/charts/DonuutChart.vue';
     import LineChart from '../components/charts/LineChart.vue';
@@ -10,9 +10,9 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 
 
 const transactions = [
-    { id: 1, description: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
-    { id: 2, description: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
-    { id: 3, description: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
+    { id: 1, category: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
+    { id: 2, category: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
+    { id: 3, category: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
 ];
     const props = defineProps({
     categories: {
@@ -99,7 +99,7 @@ const transactions = [
                 <li v-for="tx in transactions" :key="tx.id" class="transactions-item">
                   <i :class="tx.icon" class="icon"></i>
                  <div class="transactions-info">
-                     <span class="description">{{ tx.description }}</span>
+                     <span class="description">{{ tx.category }}</span>
                       <span class="date">{{ tx.date }}</span>
                   
                  </div>

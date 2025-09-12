@@ -51,7 +51,7 @@
             <Inputs type="password" v-model="password" placeholder="Password" icon="fas fa-lock" />
             <Inputs type="password" v-model="re_password" placeholder="Confirm Password" icon="fas fa-lock" />
             <Button variant="primary" class="btn-login" type="submit">Register</Button>
-            <p>Already have an account?<a href="/login">Login</a></p>
+            <p>Already have an account?<a href="/auth/login">Login</a></p>
         </form>
     </section>
     </article>

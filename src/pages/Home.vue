@@ -120,7 +120,7 @@ function goToRegister() {
   justify-content: flex-start;
   gap: 20px;
   margin-bottom: 20px;
-  pading-top: 20px;
+  padding-top: 20px;
 
 }
 .btn-second{
@@ -128,14 +128,14 @@ function goToRegister() {
   justify-content: center;
   gap: 20px;
   margin-top: 40px;
-  pading-top: 20px;
+  padding-top: 20px;
 }
 .header-left {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  pading-top: 20px;
+  padding-top: 20px;
   margin-top: 20px;
 }
 .illustration {

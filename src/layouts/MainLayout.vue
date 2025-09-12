@@ -1,5 +1,5 @@
 <script setup>
-import NavBar from "../pages/NavBar.vue";
+import NavBar from "../components/NavBar.vue";
 import { useAuthStore } from "../store/authStore";
 import DashBoard from "../pages/DashBoard.vue";
 
