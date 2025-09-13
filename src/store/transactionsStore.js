@@ -10,7 +10,7 @@ export const useTransactionStore = defineStore("transaction", {
     actions: {
         async fetchTransactions() {
             this.loading = true;
-            const response = await axiosET.get("/transactions");
+            const response = await axiosET.get("api/transactions");
             this.transactions = response.data;
             this.transactions = this.transactions.map(tx => ({
                 ...tx,

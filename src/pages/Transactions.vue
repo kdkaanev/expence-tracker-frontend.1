@@ -113,9 +113,8 @@
                         <td>{{ transaction.category }}</td>
                         <td>{{ transaction.date }}</td>
                         <td>{{ getCategotyName(transaction.category) }}</td>
-                        <td :class="transaction.type === 'income' ? 'income' : 'expense'">
-                            {{ transaction.type === 'income' ? '+' : '-' }}${{ transaction.amount.toFixed(2) }}
-                        </td>
+
+                      <td> {{ transaction.amount}}</td>
                        
                         
                         <td class="center">

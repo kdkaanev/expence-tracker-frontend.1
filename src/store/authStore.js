@@ -43,8 +43,9 @@ export const useAuthStore = defineStore("auth", {
     },
 
     // Инициализация при startup
+
     async initAuth() {
-      if (this.isInitialized) return
+      if (!this.isInitialized) return
       this.isInitialized = true
 
       const access = localStorage.getItem("access")

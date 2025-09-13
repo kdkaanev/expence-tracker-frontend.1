@@ -28,7 +28,7 @@ const routes = [
   { 
     path: "/",
     component: MainLayout,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true },
     children: [
       {path: "", name:'dashboard', component: DashBoard},
       {path: "transactions", name:'transactions', component: Transactions},
@@ -51,7 +51,7 @@ router.beforeEach(async (to , from, next) => {
     const authStore = useAuthStore();
     if (to.meta.requiresAuth) {
       const ok = await authStore.initAuth();
-      if (!ok) return next('/auth');
+      if (ok) return next('/auth');
     }
     next();
 })

@@ -41,7 +41,7 @@ axiosET.interceptors.response.use(
       if (!refresh) return Promise.reject(error)
 
       try {
-        const res = await axiosET.post("/auth/jwt/refresh/", { refresh })
+        const res = await axiosET.post("api/auth/jwt/refresh/", { refresh })
         const newAccess = res.data.access
         localStorage.setItem("access", newAccess)
         originalRequest.headers.Authorization = `Bearer ${newAccess}`
