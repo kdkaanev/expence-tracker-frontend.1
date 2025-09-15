@@ -62,19 +62,19 @@ const transactions = [
             <p>your financial review for September.</p>
            </section>
            <div class="info">
-            <section class="card">
+            <section class="card odd">
                 <h2>Total Balance</h2>
                 <p>$5,000.00</p>
             </section>
-            <section class="card">
+            <section class="card even">
                 <h2>Income this month</h2>
                 <p>$3,000.00</p>
             </section>
-            <section class="card">
+            <section class="card even">
                 <h2>Expenses this month</h2>
                 <p>$1,500.00</p>
             </section>
-            <section class="card">
+            <section class="card odd">
                 <h2>Saving</h2>
                 <p>$1,500.00</p>
             </section>
@@ -200,6 +200,21 @@ const transactions = [
     font-size: 0.875rem;
     margin-left: 1rem;
     text-align: end;
+}
+.odd {
+    background-color: #27ae60;
+}
+.odd:hover {
+    background-color: #219150;
+    cursor: pointer;
+}
+.even {
+    background-color: #46a9ff;
+    
+}
+.even:hover {
+    background-color: #1B7FBF;
+    cursor: pointer;
 }
 
 </style>

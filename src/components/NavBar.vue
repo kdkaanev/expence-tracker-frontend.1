@@ -46,7 +46,7 @@ a {
     color: black;
 }
 .primary {
-        background-color: #2D9CDB;
+    
 
     color: white;
     border: none;
@@ -57,6 +57,8 @@ a {
     cursor: pointer;
     text-align: center;
 }
-
+.primary:hover {
+    background-color: #219150;
+}
 
 </style>

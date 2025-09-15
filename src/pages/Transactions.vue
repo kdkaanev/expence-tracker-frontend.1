@@ -2,6 +2,8 @@
     import { ref, onMounted, watch } from "vue";
     import { useTransactionStore } from "../store/transactionsStore.js";
     import { useCategoryStore } from "../store/categoryStore.js";
+    import Button from "../components/ui/Button.vue";
+    
 
     const transactionStore = useTransactionStore();
     const categoryStore = useCategoryStore();
@@ -16,7 +18,11 @@
         amount: 0,
         category: ""
     });
-    
+    const transactions = [
+    { id: 1, category: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
+    { id: 2, category: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
+    { id: 3, category: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
+];
 
     onMounted(async() => {
         await transactionStore.fetchTransactions();
@@ -99,18 +105,21 @@
             <table class="table">
                 <thead class="thead">
                     <tr>
-                        <th class="th-text">Date</th>
+                        
                         <th class="th-text">Category</th>
+                        <th class="th-text">Date</th>
+                        <th class="th-text">Type</th>
                         <th class="th-text">Amount</th>
+                        <th class="th-text">Edit/Delete</th>
                      
                        
                      
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
-                        <td><i :class="transaction.icon" class="icon"></i></td>
-                        <td>{{ transaction.category }}</td>
+                  <!-- <tr v-for="transaction in transactionStore.transactions" :key="transaction.id"> -->
+                    <tr v-for="transaction in transactions" :key="transaction.id">
+                        <td><i :class="transaction.icon" class="icon"></i>{{ transaction.category }}</td>
                         <td>{{ transaction.date }}</td>
                         <td>{{ getCategotyName(transaction.category) }}</td>
 
@@ -118,8 +127,8 @@
                        
                         
                         <td class="center">
-                            <button class="primary" @click="openEditModal(transaction)">🖊️</button>
-                            <button class="secondary" @click="deleteTransaction(transaction.id)">🗑️</button>
+                            <button class="transparant" @click="openEditModal(transaction)">✏️</button>
+                            <button class="transparant" @click="deleteTransaction(transaction.id)">🗑️</button>
                         </td>
                     </tr>
                 </tbody>
@@ -141,8 +150,8 @@
                           <option value="__add__" >+ Add New Category</option>
                      </select>
                      <div class="btn">
-                        <button class="primary" @click="saveTransaction">Save</button>
-                        <button class="secondary" @click="closeModal">Cancel</button>
+                        <Button variant="primary" @click="saveTransaction">Save</Button>
+                        <Button variant="secondary" @click="closeModal">Cancel</Button>
                      </div>
                      <div v-if="showCategoryModal" class="modal-category">
                         <!-- Category Modal Content Here -->
@@ -151,8 +160,8 @@
                             <h2>Add New Category</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
                             <div class="btn">
-                                <button class="primary" @click="addCategory">Add Category</button>
-                                <button class="secondary" @click="closeCategoryModal = false">Cancel</button>
+                                <Button variant="primary" @click="addCategory">Add Category</Button>
+                                <Button variant="secondary" @click="closeCategoryModal = false">Cancel</Button>
                             </div>
                          </div>
 
@@ -167,5 +176,28 @@
 </template>
 
 <style scoped>
-
+.primary{
+        background-color: #27ae60;
+    
+}
+.primary:hover {
+    background-color: #219150;
+    cursor: pointer;
+}
+.transparant{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    
+   
+}
+.icon {
+    margin-right: 0.5rem;
+    color: #27ae60;
+}
+.btn {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
 </style>
