@@ -4,8 +4,8 @@
     const authStore = useAuthStore();
     import DonuutChart from '../components/charts/DonuutChart.vue';
     import LineChart from '../components/charts/LineChart.vue';
-import { Doughnut } from 'vue-chartjs';
-import { icon } from '@fortawesome/fontawesome-svg-core';
+    import { Doughnut } from 'vue-chartjs';
+    import { icon } from '@fortawesome/fontawesome-svg-core';
 
 
 
@@ -55,7 +55,7 @@ const transactions = [
 <template>
     
        
-        <article class="dashboard">
+        <article class="container">
              
            <section class="title">
             <h1>Welcome, Ivan!</h1>
@@ -216,6 +216,11 @@ const transactions = [
     background-color: #1B7FBF;
     cursor: pointer;
 }
-
+.container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 </style>
 
