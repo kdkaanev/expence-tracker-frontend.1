@@ -49,10 +49,24 @@ const router = createRouter({
 });
 router.beforeEach(async (to , from, next) => {
     const authStore = useAuthStore();
-    if (to.meta.requiresAuth) {
-      const ok = await authStore.initAuth();
-      if (ok) return next('/auth');
+
+    const access =localStorage.getItem("access");
+    if (access && !authStore.user) {
+        try {
+            await authStore.initAuth();
+
+        }catch {
+            authStore.logout();
+        }
     }
+
+    if (to.meta.requiresAuth && !authStore.accessToken) {
+      return next("auth");
+    }
+
+    if (!to.meta.requiresAuth && authStore.accessToken && (to.name === "login" || to.name === "register")) {
+    return next("/");
+  }
     next();
 })
 

@@ -10,7 +10,7 @@ export const useCategoryStore = defineStore('category', {
         async fetchCategories() {
             this.loading = true;
             try {
-                const response = await axiosET.get('/categories');
+                const response = await axiosET.get('api/categories');
                 this.categories = response.data;
                 this.loading = false;
             } catch (error) {
@@ -21,7 +21,7 @@ export const useCategoryStore = defineStore('category', {
         },
         async createCategory(categoryData) {
             try {
-                const response = await axiosET.post('/categories', categoryData);
+                const response = await axiosET.post('api/categories', categoryData);
                 this.categories.push(response.data);
             } catch (error) {
                 console.error('Error creating category:', error);
