@@ -3,6 +3,8 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 import DonuutChart from '../components/charts/DonuutChart.vue';
 import LineChart from '../components/charts/LineChart.vue';
 import Button from '../components/ui/Button.vue';
+import BarChart from '../components/charts/BarChart.vue';
+import HorizontalBar from '../components/charts/HorizontalBar.vue';
 
 
     const budgetData = [
@@ -20,15 +22,16 @@ import Button from '../components/ui/Button.vue';
     },
     values: {
       type: Array,
-      default: () => [300, 100, 150, 200, 100, 250],
+      default: () => [300, 100,],
     },
+    
     });
     const chartData = {
     labels: props.categories,
     datasets: [
       {
         data: props.values,
-        backgroundColor: ['#27ae60', '#f39c12', '#e74c3c', '#8e44ad', '#3498db', '#e67e22'],
+        backgroundColor: ['#27ae60', ],
         borderWidth: 2,
       },
     ],
@@ -36,18 +39,19 @@ import Button from '../components/ui/Button.vue';
     const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '60%',
+    cutout: '80%',
     plugins: {
       legend: {
-        position: 'bottom',
-        labels: {
-          color: '#333',
-          font: { size: 14 },
-
-      },
+        display: false,
+       
     }
     },
     };
+
+    const julyData = {
+        labels: ['July Data'],
+        values: [800],
+    }
 </script>
 
 <template>
@@ -56,8 +60,8 @@ import Button from '../components/ui/Button.vue';
         <section class="container">
             
             <div class="leftside">
-                <section class="card donut">
-                    <DonuutChart :chart-data="chartData" :chart-options="chartOptions" />
+                <section class="card">
+                    <DonuutChart class="donut" :chart-data="chartData" :chart-options="chartOptions" />
                     <div class="summary">
                         <p>Total Budget</p>
                         <h3>$1,100</h3>
@@ -67,16 +71,25 @@ import Button from '../components/ui/Button.vue';
                     <div  v-for="item in budgetData" :key="item.category" class="card budget-item">
                         <i :class="item.icon" class="icon"></i>
                         <div class="budget-details">
+                        
                             <h3>{{ item.category }}</h3>
-                            <p>Limit: ${{ item.limit }}</p>
-                            <p>Spent: ${{ item.spent }}</p>
-                            <p>Remaining: ${{ item.limit - item.spent }}</p>
+                            <HorizontalBar
+                                :lables="julyData.labels"
+                                :values="julyData.values"
+                                :maxValue="1500"
+                            />
+
+                            <div class="summ">
+                                <p>Limit: ${{ item.limit }}</p>
+                                <p>Spent: ${{ item.spent }}</p>
+                            </div>
+                            
                         </div>
                     </div>
                 </section>
             </div>
             <div class="rightside">
-                <LineChart />
+                <BarChart />
                 <Button variant="primary">+ Add Budget</Button>
             </div>
 
@@ -98,6 +111,7 @@ import Button from '../components/ui/Button.vue';
         flex-direction: column;
         gap: 20px;
         width: 50%;
+        padding-top: 2rem;
     }
     .rightside {
         display: flex;
@@ -106,7 +120,10 @@ import Button from '../components/ui/Button.vue';
         width: 50%;
         padding-left: 20px;
         border-left: 1px solid #eee;
+        padding-bottom: 1rem;
+
     }
+    
     .budget-list {
         display: flex;
         flex-direction: column;
@@ -136,23 +153,24 @@ import Button from '../components/ui/Button.vue';
         margin: 2px 0;
         color: #555;
     }
-    .donut {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 400px;
-        width: auto;
-    }
+   
     .card {
+        display: flex;
+        flex-direction: row;
         background-color: #f9f9f9;
+        gap: 2rem;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .rightside {
-        margin-top: 20px;
+    .donut{
+        width: 50%;
+    }
+    .summary{
         display: flex;
-        justify-content: flex-end;
+        flex-direction: column;
+        gap: 1rem;
+
     }
 
 </style>
