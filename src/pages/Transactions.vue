@@ -3,6 +3,7 @@
     import { useTransactionStore } from "../store/transactionsStore.js";
     import { useCategoryStore } from "../store/categoryStore.js";
     import Button from "../components/ui/Button.vue";
+    import { categoryIcons } from "../services/categoryIcons.js";
     
 
     const transactionStore = useTransactionStore();
@@ -14,6 +15,7 @@
     const newCategoryName = ref("");
     const formData = ref({
         id: null,
+        description: "",
         date: "",
         amount: 0,
         category: ""
@@ -26,13 +28,14 @@
 
     onMounted(async() => {
         await transactionStore.fetchTransactions();
-        await useCategoryStore.fetchCategories();
+        await categoryStore.fetchCategories();
     });
 
     const openAddModal = () => {
         editMode.value = false;
         formData.value = {
             id: null,
+            description: "",
             date: "",
             amount: 0,
             category: ""
@@ -82,6 +85,10 @@
         newCategoryName.value = "";
         showCategoryModal.value = false;
     };
+    function getIcon(categoryName) {
+      console.log(categoryIcons[categoryName])
+      return categoryIcons[categoryName] || "tag"; // по подразбиране tag
+}
    
    
 
@@ -108,7 +115,7 @@
                         
                         <th class="th-text">Category</th>
                         <th class="th-text">Date</th>
-                        <th class="th-text">Type</th>
+                        <th class="th-text">Description</th>
                         <th class="th-text">Amount</th>
                         <th class="th-text">Edit/Delete</th>
                      
@@ -117,11 +124,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr v-for="transaction in transactionStore.transactions" :key="transaction.id"> -->
-                    <tr v-for="transaction in transactions" :key="transaction.id">
-                        <td><i :class="transaction.icon" class="icon"></i>{{ transaction.category }}</td>
-                        <td>{{ transaction.date }}</td>
-                        <td>{{ getCategotyName(transaction.category) }}</td>
+                  <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+
+                        <td><div class="cat-name">
+                          <font-awesome-icon
+                            :icon="getIcon(transaction.category_name)"
+                            class="text-blue-500 w-5 h-5"
+                        /><span class="capitalize">{{transaction.category_name}}</span>
+                        </div> </td>
+                        <td>{{ transaction.created_at}}</td>
+                        <td>{{ transaction.description }}</td>
 
                       <td> {{ transaction.amount}}</td>
                        
@@ -137,12 +149,14 @@
                 <div class="modal-content">
                     <span class="close" @click="closeModal">&times;</span>
                     <h2>{{ editMode ? 'Edit Transaction' : 'Add Transaction' }}</h2>
+                  <label>Description:</label>
+                    <input type="text" v-model="formData.description" placeholder="Description" />
                     <label>Date:</label>
                    <input type="date" v-model="formData.date" />
                    <label>Amount:</label>
                    <input type="number" v-model="formData.amount" placeholder="Amount" />
                      <label>Category:</label>
-                     <select v-model="selectedCategory">
+                     <select v-model="formData.category">
                         <option disabled value="">Select Category</option>
                           <option v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
                             {{ category.name }}
@@ -199,5 +213,13 @@
     margin-top: 1rem;
     display: flex;
     gap: 1rem;
+}
+.capitalize{
+    text-transform: capitalize;
+}
+.cat-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 </style>
