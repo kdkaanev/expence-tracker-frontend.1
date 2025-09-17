@@ -1,12 +1,11 @@
 import { defineStore } from "pinia"
 import { loginUser, registerUser } from "../services/authServices.js"
-
-
 import { jwtDecode}  from "jwt-decode";
 import { useRouter }  from "vue-router";
 
 const router = useRouter();
 
+const router = useRouter();
 
 export const useAuthStore = defineStore("auth", {
   id: "auth",
@@ -32,8 +31,6 @@ export const useAuthStore = defineStore("auth", {
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
 
-
-
       return true;
 
 
@@ -49,11 +46,15 @@ export const useAuthStore = defineStore("auth", {
     },
 
     logout() {
+
       this.accessToken = null
       this.refreshToken = null
       this.user = null
       localStorage.removeItem("access")
       localStorage.removeItem("refresh")
+
+
+
 
 
 
