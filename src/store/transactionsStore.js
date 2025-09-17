@@ -10,6 +10,7 @@ export const useTransactionStore = defineStore("transaction", {
     actions: {
         async fetchTransactions() {
             this.loading = true;
+          git status
             const response = await axiosET.get("api/transactions");
             this.transactions = response.data;
 
