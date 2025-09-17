@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import { loginUser, registerUser } from "../services/authServices.js"
+import router from "../router/index.js";
 
 export const useAuthStore = defineStore("auth", {
   id: "auth",
@@ -23,6 +24,8 @@ export const useAuthStore = defineStore("auth", {
 
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
+
+      return true
     },
 
     async register(registerData) {
@@ -40,6 +43,9 @@ export const useAuthStore = defineStore("auth", {
       this.user = null
       localStorage.removeItem("access")
       localStorage.removeItem("refresh")
+      router.push("/auth")
+
+
     },
 
     // Инициализация при startup

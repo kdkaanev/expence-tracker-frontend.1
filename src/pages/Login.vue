@@ -6,16 +6,27 @@ import Button from "../components/ui/Button.vue";
 const email = ref("");
 const password = ref("");
 import { useAuthStore} from "../store/authStore.js";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const authStore = useAuthStore();
 const formData = ref({
   email: "",
   password: ""
 })
-const onLogin = () => {
+const onLogin = async () => {
+
   formData.value.email = email.value;
   formData.value.password = password.value;
-  authStore.login(formData.value);
+  const success = await authStore.login(formData.value);
+
+  if (success) {
+    // Redirect to dashboard or another page after successful login
+    router.push("/");
+  } else {
+    alert("Login failed. Please check your credentials.");
+  }
+
 
 }
 </script>
