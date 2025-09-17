@@ -3,7 +3,9 @@ import { loginUser, registerUser } from "../services/authServices.js"
 
 
 import { jwtDecode}  from "jwt-decode";
-import {useRouter} from "vue-router";
+import { useRouter }  from "vue-router";
+
+const router = useRouter();
 
 
 export const useAuthStore = defineStore("auth", {
@@ -53,7 +55,6 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("access")
       localStorage.removeItem("refresh")
 
-      router.push("/auth")
 
 
 
