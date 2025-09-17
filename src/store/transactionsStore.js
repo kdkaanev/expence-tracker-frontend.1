@@ -12,15 +12,12 @@ export const useTransactionStore = defineStore("transaction", {
             this.loading = true;
             const response = await axiosET.get("api/transactions");
             this.transactions = response.data;
-            this.transactions = this.transactions.map(tx => ({
-                ...tx,
-                icon: categoryIcons[tx.category] || categoryIcons.default,
-            }));
+
 
             this.loading = false;
         },
         async addTransaction(transactionData) {
-            const response = await axiosET.post("/transactions", transactionData);
+            const response = await axiosET.post("api/transactions/", transactionData);
             this.transactions.push(response.data);
         },
         async updateTransaction(transactionId, updatedData) {
