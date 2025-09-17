@@ -21,9 +21,9 @@
         category: ""
     });
     const transactions = [
-    { id: 1, category: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
-    { id: 2, category: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
-    { id: 3, category: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
+    { id: 1, category: 'Grocery', amount: 50.0, created_at:'2025-09-10', description:"Very Good", type: 'expense', icon: 'fas fa-envelope' },
+    { id: 2, category: 'Salary', amount: 3000.0, created_at:'2025-09-11', description: "Mnogo malka", type: 'income', icon: 'fas fa-money-bill' },
+    { id: 3, category: 'Electricity Bill', amount: 100.0, created_at:'2025-09-11', description: "mnogo golqma", type: 'expense', icon: 'fas fa-bolt' },
 ];
 
     onMounted(async() => {
@@ -124,8 +124,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
-
+                   <!-- <tr v-for="transaction in transactionStore.transactions" :key="transaction.id"> -->
+                    <tr v-for="transaction in transactions" :key="transaction.id">
                         <td><div class="cat-name">
                           <font-awesome-icon
                             :icon="getIcon(transaction.category_name)"

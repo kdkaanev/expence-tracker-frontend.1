@@ -5,6 +5,7 @@ import LineChart from '../components/charts/LineChart.vue';
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
+import { computed } from 'vue';
 
 
     const budgetData = [
@@ -48,10 +49,14 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
     },
     };
 
-    const julyData = {
-        labels: ['July Data'],
-        values: [800],
-    }
+    const budgetStatus = (category) => {
+        const budget = budgetData.find(b => b.category === category);
+        if (budget) {
+            const used = ((budget.spent / budget.limit) * 100).toFixed(0);
+            return { used: used > 100 ? 100 : used, remaining: budget.limit - budget.spent };
+        }
+        return { used: 0, remaining: 0 };
+    };
 </script>
 
 <template>
@@ -74,14 +79,14 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
                         
                             <h3>{{ item.category }}</h3>
                             <HorizontalBar
-                                :lables="julyData.labels"
-                                :values="julyData.values"
-                                :maxValue="1500"
+                                :firsst-value="(budgetStatus(item.category).used)"
+                                first-color="#22c55e"
+                                second-color="#ef4444"
                             />
 
                             <div class="summ">
-                                <p>Limit: ${{ item.limit }}</p>
-                                <p>Spent: ${{ item.spent }}</p>
+                                <p>${{ item.limit }}</p>
+                                <p>${{ item.spent }}</p>
                             </div>
                             
                         </div>
@@ -145,6 +150,9 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
         margin-right: 1rem;
         color: #27ae60;
     }
+    .budget-details {
+        flex: 1;
+    }
     .budget-details h3 {
         margin: 0;
         font-size: 1.2rem;
@@ -152,6 +160,12 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
     .budget-details p {
         margin: 2px 0;
         color: #555;
+    }
+    .summ {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        font-weight: bold;
     }
    
     .card {
