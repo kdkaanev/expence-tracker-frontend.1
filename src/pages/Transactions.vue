@@ -4,6 +4,12 @@
     import { useCategoryStore } from "../store/categoryStore.js";
     import Button from "../components/ui/Button.vue";
     import { categoryIcons } from "../services/categoryIcons.js";
+    import { format } from "date-fns";
+
+
+
+
+
     
 
     const transactionStore = useTransactionStore();
@@ -16,10 +22,11 @@
     const formData = ref({
         id: null,
         description: "",
-        date: "",
+        transaction_date: "2025-09-18T12:34:56.789Z",
         amount: 0,
         category: ""
     });
+    const formattedDate = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
     const transactions = [
     { id: 1, category: 'Grocery', amount: 50.0, created_at:'2025-09-10', description:"Very Good", type: 'expense', icon: 'fas fa-envelope' },
     { id: 2, category: 'Salary', amount: 3000.0, created_at:'2025-09-11', description: "Mnogo malka", type: 'income', icon: 'fas fa-money-bill' },
@@ -36,7 +43,7 @@
         formData.value = {
             id: null,
             description: "",
-            date: "",
+            transaction_date: "",
             amount: 0,
             category: ""
         };
@@ -54,10 +61,12 @@
     };
 
     const saveTransaction = async () => {
-       if (formData.value.amount <= 0 || !formData.value.date || !formData.value.category) {
+
+       if (formData.value.amount <= 0 || !formData.value.transaction_date || !formData.value.category) {
            alert("Please fill all fields correctly.");
            return;
        }
+       formData.value.transaction_date = formattedDate
        if (editMode.value) {
            await transactionStore.updateTransaction(formData.value);
        } else {
@@ -86,7 +95,6 @@
         showCategoryModal.value = false;
     };
     function getIcon(categoryName) {
-      console.log(categoryIcons[categoryName])
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
 }
    
@@ -132,7 +140,7 @@
                             class="text-blue-500 w-5 h-5"
                         /><span class="capitalize">{{transaction.category_name}}</span>
                         </div> </td>
-                        <td>{{ transaction.created_at}}</td>
+                        <td>{{ transaction.transaction_date}}</td>
                         <td>{{ transaction.description }}</td>
 
                       <td> {{ transaction.amount}}</td>
@@ -152,7 +160,7 @@
                   <label>Description:</label>
                     <input type="text" v-model="formData.description" placeholder="Description" />
                     <label>Date:</label>
-                   <input type="date" v-model="formData.date" />
+                   <input type="date" v-model="formData.transaction_date" />
                    <label>Amount:</label>
                    <input type="number" v-model="formData.amount" placeholder="Amount" />
                      <label>Category:</label>

@@ -28,7 +28,7 @@ export const useTransactionStore = defineStore("transaction", {
             }
         },
         async deleteTransaction(transactionId) {
-            await axiosET.delete(`/transactions/${transactionId}`);
+            await axiosET.delete(`api/transactions/${transactionId}/`);
             this.transactions = this.transactions.filter(tx => tx.id !== transactionId);
         }
     },
