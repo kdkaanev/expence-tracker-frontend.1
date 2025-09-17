@@ -124,8 +124,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <!-- <tr v-for="transaction in transactionStore.transactions" :key="transaction.id"> -->
-                    <tr v-for="transaction in transactions" :key="transaction.id">
+                   <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+                   <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
                         <td><div class="cat-name">
                           <font-awesome-icon
                             :icon="getIcon(transaction.category_name)"
