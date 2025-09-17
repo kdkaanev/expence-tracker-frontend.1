@@ -4,8 +4,8 @@
     const authStore = useAuthStore();
     import DonuutChart from '../components/charts/DonuutChart.vue';
     import LineChart from '../components/charts/LineChart.vue';
-import { Doughnut } from 'vue-chartjs';
-import { icon } from '@fortawesome/fontawesome-svg-core';
+    import { Doughnut } from 'vue-chartjs';
+    import { icon } from '@fortawesome/fontawesome-svg-core';
 
 
 
@@ -55,26 +55,26 @@ const transactions = [
 <template>
     
        
-        <article class="dashboard">
+        <article class="container">
              
            <section class="title">
             <h1>Welcome, Ivan!</h1>
             <p>your financial review for September.</p>
            </section>
            <div class="info">
-            <section class="card">
+            <section class="card odd">
                 <h2>Total Balance</h2>
                 <p>$5,000.00</p>
             </section>
-            <section class="card">
+            <section class="card even">
                 <h2>Income this month</h2>
                 <p>$3,000.00</p>
             </section>
-            <section class="card">
+            <section class="card even">
                 <h2>Expenses this month</h2>
                 <p>$1,500.00</p>
             </section>
-            <section class="card">
+            <section class="card odd">
                 <h2>Saving</h2>
                 <p>$1,500.00</p>
             </section>
@@ -201,6 +201,26 @@ const transactions = [
     margin-left: 1rem;
     text-align: end;
 }
-
+.odd {
+    background-color: #27ae60;
+}
+.odd:hover {
+    background-color: #219150;
+    cursor: pointer;
+}
+.even {
+    background-color: #46a9ff;
+    
+}
+.even:hover {
+    background-color: #1B7FBF;
+    cursor: pointer;
+}
+.container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 </style>
 

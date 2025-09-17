@@ -6,7 +6,9 @@ import Button from "../components/ui/Button.vue";
 const email = ref("");
 const password = ref("");
 import { useAuthStore} from "../store/authStore.js";
-import {useRouter} from "vue-router";
+
+import { useRouter } from "vue-router";
+
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -15,17 +17,21 @@ const formData = ref({
   password: ""
 })
 const onLogin = async () => {
-  formData.value.email = email.value
-  formData.value.password = password.value
-  try {
-    const ok = await authStore.login(formData.value) // Изчакай login да приключи
-    if (ok) {
-      router.push("/") // Пренасочване след успешен вход
-    }
-  } catch (err) {
-    console.error("Login failed:", err)
-    alert("Невалидни данни за вход")
+
+
+  formData.value.email = email.value;
+  formData.value.password = password.value;
+  const success = await authStore.login(formData.value);
+
+  if (success) {
+    // Redirect to dashboard or another page after successful login
+    router.push("/");
+  } else {
+    alert("Login failed. Please check your credentials.");
   }
+
+
+
 }
 
 </script>
