@@ -5,6 +5,7 @@ import LineChart from '../components/charts/LineChart.vue';
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
+import { computed } from 'vue';
 
 
     const budgetData = [
@@ -48,9 +49,14 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
     },
     };
 
-    const budgetStatus = {
-        used: 70,
-    }
+    const budgetStatus = (category) => {
+        const budget = budgetData.find(b => b.category === category);
+        if (budget) {
+            const used = ((budget.spent / budget.limit) * 100).toFixed(0);
+            return { used: used > 100 ? 100 : used, remaining: budget.limit - budget.spent };
+        }
+        return { used: 0, remaining: 0 };
+    };
 </script>
 
 <template>
@@ -73,7 +79,7 @@ import HorizontalBar from '../components/charts/HorizontalBar.vue';
                         
                             <h3>{{ item.category }}</h3>
                             <HorizontalBar
-                                :firsst-value="(budgetStatus.used)"
+                                :firsst-value="(budgetStatus(item.category).used)"
                                 first-color="#22c55e"
                                 second-color="#ef4444"
                             />
