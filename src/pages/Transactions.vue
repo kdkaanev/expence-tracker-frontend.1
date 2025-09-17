@@ -81,7 +81,7 @@
             alert("Category name cannot be empty.");
             return;
         }
-        await categoryStore.addCategory({ name: newCategoryName.value });
+        await categoryStore.createCategory({ name: newCategoryName.value });
         newCategoryName.value = "";
         showCategoryModal.value = false;
     };

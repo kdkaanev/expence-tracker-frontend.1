@@ -1,6 +1,13 @@
 <script setup>
 import { useAuthStore } from "../store/authStore";
 const authStore = useAuthStore();
+import  { useRouter } from "vue-router";
+const router = useRouter();
+
+const onLogout = async () => {
+    await authStore.logout();
+    router.push("/auth");
+};
 </script>
 
 
@@ -15,7 +22,7 @@ const authStore = useAuthStore();
                     <router-link to="/budget" class="link">Budget</router-link>
                     <router-link to="/pots" class="link">Pots</router-link>
                     <router-link to="/recuring" class="link">Recuring</router-link>
-                    <a class="link" @click="authStore.logout">Logout</a>
+                    <a class="link" @click="onLogout">Logout</a>
                    
                 
 

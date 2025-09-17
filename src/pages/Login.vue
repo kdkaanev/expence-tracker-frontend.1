@@ -6,7 +6,9 @@ import Button from "../components/ui/Button.vue";
 const email = ref("");
 const password = ref("");
 import { useAuthStore} from "../store/authStore.js";
+
 import { useRouter } from "vue-router";
+
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -15,6 +17,7 @@ const formData = ref({
   password: ""
 })
 const onLogin = async () => {
+
 
   formData.value.email = email.value;
   formData.value.password = password.value;
@@ -28,7 +31,9 @@ const onLogin = async () => {
   }
 
 
+
 }
+
 </script>
 
 <template>

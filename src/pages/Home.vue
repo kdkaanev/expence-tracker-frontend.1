@@ -13,7 +13,7 @@ function goToLogin() {
 function goToRegister() {
   router.push("auth/register")
 }
-</script>
+</script>s
 
 <template>
   <article>

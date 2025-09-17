@@ -1,6 +1,10 @@
 import { defineStore } from "pinia"
 import { loginUser, registerUser } from "../services/authServices.js"
-import router from "../router/index.js";
+
+
+import { jwtDecode}  from "jwt-decode";
+import {useRouter} from "vue-router";
+
 
 export const useAuthStore = defineStore("auth", {
   id: "auth",
@@ -17,6 +21,7 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login(loginData) {
+
       const { accessToken, refreshToken, decodedToken } = await loginUser(loginData)
       this.accessToken = accessToken
       this.refreshToken = refreshToken
@@ -25,7 +30,11 @@ export const useAuthStore = defineStore("auth", {
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
 
-      return true
+
+
+      return true;
+
+
     },
 
     async register(registerData) {
@@ -43,7 +52,9 @@ export const useAuthStore = defineStore("auth", {
       this.user = null
       localStorage.removeItem("access")
       localStorage.removeItem("refresh")
+
       router.push("/auth")
+
 
 
     },
@@ -51,26 +62,25 @@ export const useAuthStore = defineStore("auth", {
     // Инициализация при startup
 
     async initAuth() {
-      if (!this.isInitialized) return
-      this.isInitialized = true
-
       const access = localStorage.getItem("access")
-      const refresh = localStorage.getItem("refresh")
-      if (!access) return
+      if (!access) return false;
+      try {
+        this.accessToken = access;
+        this.refreshToken = localStorage.getItem("refresh");
+        this.user = jwtDecode(access);
+        return true;
+      }catch {
+        this.logout();
+        return false;
+      }
 
-      this.accessToken = access
-      this.refreshToken = refresh
+
+
+
 
       // Извикваме /users/me/ само веднъж при startup
-      try {
-        const res = await import("../config/axiosinstance.js").then(m => m.default)
-        const response = await res.get("/auth/users/me/", {
-          headers: { Authorization: `Bearer ${access}` }
-        })
-        this.user = response.data
-      } catch {
-        this.logout()
+
       }
     },
-  },
+
 })
