@@ -16,7 +16,9 @@ export const useTransactionStore = defineStore("transaction", {
 
             this.loading = false;
         },
+
         async addTransaction(transactionData) {
+
             const response = await axiosET.post("api/transactions/", transactionData);
             this.transactions.push(response.data);
         },

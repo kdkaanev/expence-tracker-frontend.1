@@ -17,7 +17,7 @@
     const showModal = ref(false);
     const editMode = ref(false);
     const showCategoryModal = ref(false);
-    const selectedCategory = ref(null);
+    const selectedCategory = ref("");
     const newCategoryName = ref("");
     const formData = ref({
         id: null,
@@ -25,6 +25,10 @@
         transaction_date: "2025-09-18T12:34:56.789Z",
         amount: 0,
         category: ""
+    });
+    const formDataCategory = ref({
+        id: null,
+        name: ""
     });
     const formattedDate = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
     const transactions = [
@@ -60,9 +64,13 @@
         showModal.value = false;
     };
 
-    const saveTransaction = async () => {
+    const isSubmitting = ref(false)
 
-       if (formData.value.amount <= 0 || !formData.value.transaction_date || !formData.value.category) {
+    const saveTransaction = async () => {
+    if (isSubmitting.value) return;
+    isSubmitting.value = true;
+      try {
+         if (formData.value.amount <= 0 || !formData.value.transaction_date || !formData.value.category) {
            alert("Please fill all fields correctly.");
            return;
        }
@@ -72,6 +80,9 @@
        } else {
            await transactionStore.addTransaction(formData.value);
        }
+      }finally {
+        isSubmitting.value = false;
+      }
     };
 
     const deleteTransaction = async (id) => {
@@ -84,6 +95,16 @@
         const category = categoryStore.categories.find(cat => cat.id === categoryId);
         return category ? category.name : "Unknown";
     };
+
+    const openCategoryModal = () => {
+        showCategoryModal.value = true;
+        formDataCategory.value = {
+            id: null,
+            name: ""
+        };
+
+    };
+
     
     const addCategory = async () => {
         if (!newCategoryName.value.trim()) {
@@ -100,7 +121,7 @@
    
    
 
-    watch(selectedCategory, (newVal) => {
+    watch(() => formData.value.category, (newVal) => {
         if (newVal === "__add__") {
             showCategoryModal.value = true;
             selectedCategory.value = "";
@@ -117,6 +138,8 @@
                 @click="openAddModal"
             >Add Transaction
         </button>
+
+
             <table class="table">
                 <thead class="thead">
                     <tr>
@@ -169,8 +192,12 @@
                           <option v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
                             {{ category.name }}
                           </option>
-                          <option value="__add__" >+ Add New Category</option>
+                          <option
+                              value="__add__"
+                          >+ Add New Category
+                          </option>
                      </select>
+                  <category-modal v-if="showCategoryModal" @close="showCategoryModal = false" @category-added="fetchCategories" />
                      <div class="btn">
                         <Button variant="primary" @click="saveTransaction">Save</Button>
                         <Button variant="secondary" @click="closeModal">Cancel</Button>
