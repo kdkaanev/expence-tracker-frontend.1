@@ -3,6 +3,7 @@
     import { ref } from "vue";
     import Button from "../components/ui/Button.vue";
     import {useAuthStore} from "../store/authStore.js";
+    import router from "../router/index.js";
 
 
     const email = ref("");
@@ -25,15 +26,24 @@
             return
         }
         try {
-          authStore.register(formData.value)
+         await authStore.register(formData.value);
           alert("Registered")
 
           email.value = ""
           password.value = ""
           re_password.value = ""
+
+
         }catch (error) {
           alert("Registration failed")
         }
+        if (authStore.isAuthenticated){
+            router.push("/")
+            return
+        }
+        router.push("/auth/login")
+
+
     }
 </script>
 
