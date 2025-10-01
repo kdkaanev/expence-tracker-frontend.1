@@ -6,6 +6,14 @@
     import LineChart from '../components/charts/LineChart.vue';
     import { Doughnut } from 'vue-chartjs';
     import { icon } from '@fortawesome/fontawesome-svg-core';
+    import { useTransactionStore } from '../store/transactionsStore';
+    import { ref, onMounted, computed } from 'vue';
+
+
+    const transactionStore = useTransactionStore();
+    onMounted(async() => {
+        await transactionStore.fetchTransactions();
+    });
 
 
 
@@ -50,6 +58,9 @@ const transactions = [
     }
     },
   };
+  const budget = computed(() => {
+    return props.values.reduce((total, value) => total + value, 0);
+  });
 </script>
 
 <template>
@@ -96,16 +107,16 @@ const transactions = [
            <section class="transactions">
             <h2>Last Transactions</h2>
             <ul>
-                <li v-for="tx in transactions" :key="tx.id" class="transactions-item">
+                <li v-for="tx in transactionStore" :key="tx.id" class="transactions-item">
                   <i :class="tx.icon" class="icon"></i>
                  <div class="transactions-info">
                      <span class="description">{{ tx.category }}</span>
                       <span class="date">{{ tx.date }}</span>
                   
                  </div>
-                 <span :class="tx.type === 'income' ? 'income' : 'expense'">
+               <!-- <span :class="tx.type === 'income' ? 'income' : 'expense'">
                     {{ tx.type === 'income' ? '+' : '-' }}${{ tx.amount.toFixed(2) }}
-                  </span>
+                  </span> -->
                 </li>
               
             </ul>
