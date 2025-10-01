@@ -5,6 +5,7 @@
     import Button from "../components/ui/Button.vue";
     import { categoryIcons } from "../services/categoryIcons.js";
     import { format } from "date-fns";
+import { is } from "date-fns/locale";
 
 
 
@@ -14,6 +15,7 @@
 
     const transactionStore = useTransactionStore();
     const categoryStore = useCategoryStore();
+    const isSubmitting = ref(false)
     const showModal = ref(false);
     const editMode = ref(false);
     const showCategoryModal = ref(false);
@@ -64,7 +66,7 @@
         showModal.value = false;
     };
 
-    const isSubmitting = ref(false)
+  
 
     const saveTransaction = async () => {
     if (isSubmitting.value) return;
@@ -111,9 +113,20 @@
             alert("Category name cannot be empty.");
             return;
         }
-        await categoryStore.createCategory({ name: newCategoryName.value });
-        newCategoryName.value = "";
-        showCategoryModal.value = false;
+        if (isSubmitting.value) return;
+        isSubmitting.value = true;
+        try {
+            await categoryStore.createCategory({ name: newCategoryName.value });
+            newCategoryName.value = "";
+            showCategoryModal.value = false;
+            await categoryStore.fetchCategories(); // Refresh categories after adding a new one
+        } finally {
+            isSubmitting.value = false;
+        }
+        
+        //await categoryStore.createCategory({ name: newCategoryName.value });
+        //newCategoryName.value = "";
+        //showCategoryModal.value = false;
     };
     function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
@@ -205,12 +218,12 @@
                      <div v-if="showCategoryModal" class="modal-category">
                         <!-- Category Modal Content Here -->
                          <div class="modal-content">
-                            <span class="close" @click="closeCategoryModal">&times;</span>
+                            <span class="close" @click="showCategoryModal=false">&times;</span>
                             <h2>Add New Category</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
                             <div class="btn">
                                 <Button variant="primary" @click="addCategory">Add Category</Button>
-                                <Button variant="secondary" @click="closeCategoryModal = false">Cancel</Button>
+                                <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
                             </div>
                          </div>
 
