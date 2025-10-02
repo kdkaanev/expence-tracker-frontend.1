@@ -1,7 +1,7 @@
 <script setup>
     import { useAuthStore } from '../store/authStore';
     import NavBar from '../components/NavBar.vue';
-    const authStore = useAuthStore();
+    import { categoryIcons } from "../services/categoryIcons.js";
     import DonuutChart from '../components/charts/DonuutChart.vue';
     import LineChart from '../components/charts/LineChart.vue';
     import { Doughnut } from 'vue-chartjs';
@@ -9,6 +9,7 @@
     import { useTransactionStore } from '../store/transactionsStore';
     import { ref, onMounted, computed } from 'vue';
 
+    const authStore = useAuthStore();
 
     const transactionStore = useTransactionStore();
     onMounted(async() => {
@@ -61,6 +62,10 @@ const transactions = [
   const budget = computed(() => {
     return props.values.reduce((total, value) => total + value, 0);
   });
+
+     function getIcon(categoryName) {
+      return categoryIcons[categoryName] || "tag"; // по подразбиране tag
+};
 </script>
 
 <template>
@@ -69,7 +74,7 @@ const transactions = [
         <article class="container">
              
            <section class="title">
-            <h1>Welcome, Ivan!</h1>
+            <h1>Welcome, {{ authStore.user.user_id }}</h1>
             <p>your financial review for September.</p>
            </section>
            <div class="info">
@@ -106,20 +111,24 @@ const transactions = [
            </section>
            <section class="transactions">
             <h2>Last Transactions</h2>
-            <ul>
-                <li v-for="tx in transactionStore" :key="tx.id" class="transactions-item">
-                  <i :class="tx.icon" class="icon"></i>
-                 <div class="transactions-info">
-                     <span class="description">{{ tx.category }}</span>
-                      <span class="date">{{ tx.date }}</span>
-                  
-                 </div>
-               <!-- <span :class="tx.type === 'income' ? 'income' : 'expense'">
-                    {{ tx.type === 'income' ? '+' : '-' }}${{ tx.amount.toFixed(2) }}
-                  </span> -->
-                </li>
-              
-            </ul>
+              <tbody>
+                   <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+                   <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
+                        <td><div class="cat-name">
+                          <font-awesome-icon
+                            :icon="getIcon(transaction.category_name)"
+                            class="text-blue-500 w-5 h-5"
+                        /><span class="capitalize">{{transaction.category_name}}</span>
+                        </div> </td>
+                        <td>{{ transaction.transaction_date}}</td>
+                        <td>{{ transaction.description }}</td>
+
+                      <td> {{ transaction.amount}}</td>
+                       
+                        
+                        
+                    </tr>
+                </tbody>
            </section>
            
         </article>
@@ -232,6 +241,15 @@ const transactions = [
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cat-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.capitalize{
+    text-transform: capitalize;
 }
 </style>
 
