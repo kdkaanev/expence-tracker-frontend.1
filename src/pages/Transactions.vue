@@ -5,7 +5,8 @@
     import Button from "../components/ui/Button.vue";
     import { categoryIcons } from "../services/categoryIcons.js";
     import { format } from "date-fns";
-import { is } from "date-fns/locale";
+    import { is } from "date-fns/locale";
+    import TransactionFilter from "../components/TransactionFilter.vue";
 
 
 
@@ -146,11 +147,15 @@ import { is } from "date-fns/locale";
     <article>
         <section class="container">
             <h1 class="text">Transactions</h1>
-            <button 
-                class="primary"
-                @click="openAddModal"
-            >Add Transaction
-        </button>
+            <TransactionFilter
+                :categories="categoryStore.categories.map(cat => cat.name)"
+                :selectedCategory="selectedCategory"
+                @update:filter="(filter) => {
+                    selectedCategory = filter.category;
+                    transactionStore.fetchTransactions(filter);
+                }"
+            />  
+          
 
 
             <table class="table">
@@ -189,6 +194,11 @@ import { is } from "date-fns/locale";
                     </tr>
                 </tbody>
             </table>
+              <Button class="btn-add"
+                variant="primary"
+                @click="openAddModal"
+            >Add Transaction
+        </Button>
             <section v-if="showModal" class="modal">
                 <div class="modal-content">
                     <span class="close" @click="closeModal">&times;</span>
@@ -202,7 +212,7 @@ import { is } from "date-fns/locale";
                      <label>Category:</label>
                      <select v-model="formData.category">
                         <option disabled value="">Select Category</option>
-                          <option v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
+                          <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
                             {{ category.name }}
                           </option>
                           <option
@@ -269,5 +279,9 @@ import { is } from "date-fns/locale";
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+.btn-add{
+    width: 100%;
+  margin-top: 1rem;
 }
 </style>
