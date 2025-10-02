@@ -19,3 +19,11 @@ export async function registerUser({ email, password, re_password }) {
   const res = await axiosET.post("api/auth/users/", { email, password, re_password })
   return res.data
 }
+
+export async function currentUser() {
+  const res = await axiosET.get(
+      "me/",
+      { headers: { Authorization: `Bearer ${localStorage.getItem("access")}` } }
+      )
+  return res.data
+}

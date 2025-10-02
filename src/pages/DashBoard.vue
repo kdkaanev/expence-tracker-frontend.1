@@ -14,6 +14,7 @@
     const transactionStore = useTransactionStore();
     onMounted(async() => {
         await transactionStore.fetchTransactions();
+        await authStore.fetchCurrentUser()
     });
 
 
@@ -66,6 +67,11 @@ const transactions = [
      function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
 };
+     const lastThreeTransactions = computed(() => {
+        return transactionStore.transactions
+            .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
+            .slice(0, 3);
+    });
 </script>
 
 <template>
@@ -74,7 +80,7 @@ const transactions = [
         <article class="container">
              
            <section class="title">
-            <h1>Welcome, {{ authStore.user.user_id }}</h1>
+            <h1>Welcome, {{ authStore.user.email }}</h1>
             <p>your financial review for September.</p>
            </section>
            <div class="info">
@@ -112,7 +118,7 @@ const transactions = [
            <section class="transactions">
             <h2>Last Transactions</h2>
               <tbody>
-                   <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+                   <tr v-for="transaction in lastThreeTransactions" :key="transaction.id">
                    <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
                         <td><div class="cat-name">
                           <font-awesome-icon

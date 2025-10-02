@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { loginUser, registerUser } from "../services/authServices.js"
+import { loginUser, registerUser, currentUser } from "../services/authServices.js"
 import { jwtDecode}  from "jwt-decode";
 import {useRouter} from "vue-router";
 
@@ -53,6 +53,12 @@ export const useAuthStore = defineStore("auth", {
 
 
 
+    },
+    async fetchCurrentUser(){
+        const response = await currentUser()
+        this.user = response;
+
+      return true;
     },
 
     // Инициализация при startup

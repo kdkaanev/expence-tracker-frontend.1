@@ -11,10 +11,6 @@ const popupRef = ref(null);
 
 
 
-const onLogout = async () => {
-    await authStore.logout();
-    router.push("/auth");
-};
 
 const toggleProfilePopUp = () => {
     showProfilePopUp.value = !showProfilePopUp.value;
@@ -59,7 +55,7 @@ onBeforeUnmount(() => {
                     <router-link to="/budget" class="link">Budget</router-link>
                     <router-link to="/pots" class="link">Pots</router-link>
                     <router-link to="/recuring" class="link">Recuring</router-link>
-                    <a class="link" @click="onLogout">Logout</a>
+
                    
                 
 

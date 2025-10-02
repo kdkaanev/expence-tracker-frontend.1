@@ -62,8 +62,8 @@ function goToRegister() {
           </div>
         </div>
         <div class="btn-second">
-          <Button variant="primary">Get started for free</Button>
-          <Button variant="secondary">Login</Button>
+          <Button variant="primary" @click="goToRegister">Get started for free</Button>
+          <Button variant="secondary" @click="goToLogin" >Login</Button>
 
         </div>
 
