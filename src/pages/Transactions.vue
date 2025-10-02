@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted, watch } from "vue";
+    import { ref, onMounted, watch, nextTick } from "vue";
     import { useTransactionStore } from "../store/transactionsStore.js";
     import { useCategoryStore } from "../store/categoryStore.js";
     import Button from "../components/ui/Button.vue";
@@ -22,6 +22,8 @@
     const showCategoryModal = ref(false);
     const selectedCategory = ref("");
     const newCategoryName = ref("");
+    const addFormRef = ref(null);
+    const categoryModalRef = ref(null);
     const formData = ref({
         id: null,
         description: "",
@@ -45,7 +47,7 @@
         await categoryStore.fetchCategories();
     });
 
-    const openAddModal = () => {
+    const openAddModal = async () => {
         editMode.value = false;
         formData.value = {
             id: null,
@@ -55,6 +57,10 @@
             category: ""
         };
         showModal.value = true;
+        await nextTick();
+        if (addFormRef.value) {
+            addFormRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     const openEditModal = (transaction) => {
@@ -140,6 +146,13 @@
             showCategoryModal.value = true;
             selectedCategory.value = "";
         }
+        nextTick(() => {
+            if (categoryModalRef.value) {
+                categoryModalRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+
     });
 </script>
 
@@ -199,7 +212,7 @@
                 @click="openAddModal"
             >Add Transaction
         </Button>
-            <section v-if="showModal" class="modal">
+            <section v-if="showModal" class="modal" ref="addFormRef">
                 <div class="modal-content">
                     <span class="close" @click="closeModal">&times;</span>
                     <h2>{{ editMode ? 'Edit Transaction' : 'Add Transaction' }}</h2>
@@ -225,7 +238,8 @@
                         <Button variant="primary" @click="saveTransaction">Save</Button>
                         <Button variant="secondary" @click="closeModal">Cancel</Button>
                      </div>
-                     <div v-if="showCategoryModal" class="modal-category">
+                     <div v-if="showCategoryModal" class="modal-category" ref="categoryModalRef">
+                         
                         <!-- Category Modal Content Here -->
                          <div class="modal-content">
                             <span class="close" @click="showCategoryModal=false">&times;</span>
@@ -283,5 +297,12 @@
 .btn-add{
     width: 100%;
   margin-top: 1rem;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 </style>
