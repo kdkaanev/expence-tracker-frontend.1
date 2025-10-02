@@ -1,20 +1,57 @@
 <script setup>
-import { useAuthStore } from "../store/authStore";
-const authStore = useAuthStore();
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import Profile from "../pages/Profile.vue";
 import  { useRouter } from "vue-router";
+import { useAuthStore } from "../store/authStore";
+
+const authStore = useAuthStore();
 const router = useRouter();
+const showProfilePopUp = ref(false);
+const popupRef = ref(null);
+
+
 
 const onLogout = async () => {
     await authStore.logout();
     router.push("/auth");
 };
+
+const toggleProfilePopUp = () => {
+    showProfilePopUp.value = !showProfilePopUp.value;
+};
+
+const handleClickOutside = (event) => {
+    if (popupRef.value && !popupRef.value.contains(event.target)) {
+        showProfilePopUp.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 
 
 <template>
      <aside class="sidebar">
-        <button class="primary"><span class="lether">F</span></button>
+        <button 
+            class="primary"
+            @click.stop="toggleProfilePopUp"
+            >
+            <span class="lether">F</span>
+        </button>
+        <div 
+            v-if="showProfilePopUp"
+            ref="popupRef"
+           
+            >
+            <Profile />     
+        </div>
             <nav class="menu">
                 
                     <router-link to="/" class="link">Dashboard</router-link>
