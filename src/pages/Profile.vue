@@ -3,6 +3,8 @@ import { useAuthStore } from "../store/authStore";
 import Button from "../components/ui/Button.vue";
 import  { useRouter } from "vue-router";
 
+
+
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -11,17 +13,25 @@ const onLogout = async () => {
     await authStore.logout();
     router.push("/auth");
 };
+const goToEdit = () => {
+    
+    console.log(initialData);
+    router.push("/edit-profile");
+};
 </script>
 
 
 <template>
     <div class="pop-up">
         <h2>User Profile</h2>
-        <p><strong>Name:</strong> {{ authStore.user.user_id }}</p>
+        <p><strong>First Name:</strong> {{ authStore.user.profile.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ authStore.user.profile.last_name }}</p>
         <p><strong>Email:</strong> kk@kk.kk</p>
-        <a  @click="onLogout">logout</a>
-        
-  
+        <div class="link">
+            <a  @click="onLogout">logout</a>
+            <a @click="goToEdit">edit</a>
+        </div>
+    
        
         <!-- Add more user details as needed -->
     </div>
@@ -50,5 +60,10 @@ a {
 a:hover {
     color: #27ae60;;
 
+}
+.link {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
 }
 </style>

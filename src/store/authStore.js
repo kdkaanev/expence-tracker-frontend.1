@@ -61,6 +61,17 @@ export const useAuthStore = defineStore("auth", {
       return true;
     },
 
+    async updateProfile(profileData) {
+        // PUT /users/me/ → 1
+        const response = await axiosET.put("me/",
+            profileData,
+            { headers: { Authorization: `Bearer ${this.accessToken}` } }  
+        )
+        this.user = response.data;
+        return true;
+    },
+
+
     // Инициализация при startup
 
     async initAuth() {
