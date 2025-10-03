@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { loginUser, registerUser, currentUser } from "../services/authServices.js"
+import {loginUser, registerUser, currentUser, updateProfile} from "../services/authServices.js"
 import { jwtDecode}  from "jwt-decode";
 import {useRouter} from "vue-router";
 
@@ -58,6 +58,11 @@ export const useAuthStore = defineStore("auth", {
         const response = await currentUser()
         this.user = response;
 
+      return true;
+    },
+  async updateProfile(profileData) {
+      const response = await updateProfile(profileData)
+      this.user = response;
       return true;
     },
 
