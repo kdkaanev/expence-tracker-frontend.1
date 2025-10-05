@@ -12,12 +12,13 @@
       last_name: ""
     });
 
-    onMounted(() => {
-      if (authStore.user && authStore.user.profile) {
-        formData.value.first_name = authStore.user.profile.first_name || "";
-        formData.value.last_name = authStore.user.profile.last_name || "";
+    onMounted(async () => {
+        await authStore.fetchCurrentUser()
+
+
+      if(authStore.user && authStore.user.profile) {
+        formData.value ={ ...authStore.user.profile}
       }
-      console.log(formData.value);
     });
 
     const onEdit = async () => {
@@ -42,8 +43,8 @@
       <p>Please edit  your profile.</p>
 
       <form @submit.prevent="onEdit">
-        <Inputs type="text" v-model="formData.value.first_name" placeholder="Enter your first name"  />
-        <Inputs type="text" v-model="formData.value.last_name" placeholder="Enter your last name"  />
+        <Inputs type="text" v-model="formData.first_name" placeholder="Enter your first name"  />
+        <Inputs type="text" v-model="formData.last_name" placeholder="Enter your last name"  />
         <Button variant="primary" class="btn-login">Save</Button>
       </form>
    </section>

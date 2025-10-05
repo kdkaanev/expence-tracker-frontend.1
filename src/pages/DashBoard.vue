@@ -13,8 +13,9 @@
 
     const transactionStore = useTransactionStore();
     onMounted(async() => {
+      await authStore.fetchCurrentUser()
         await transactionStore.fetchTransactions();
-        await authStore.fetchCurrentUser()
+
     });
 
 

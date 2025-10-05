@@ -2,8 +2,11 @@ import { defineStore } from "pinia"
 import {loginUser, registerUser, currentUser, updateProfile} from "../services/authServices.js"
 import { jwtDecode}  from "jwt-decode";
 import {useRouter} from "vue-router";
+import axiosЕТ from "../config/axiosinstance.js"
 
 const router = useRouter();
+
+let refreshInterval = null;
 
 export const useAuthStore = defineStore("auth", {
   id: "auth",
@@ -29,6 +32,8 @@ export const useAuthStore = defineStore("auth", {
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
 
+      refreshInterval = setIntervval(this.refreshTokenAction, 4.5 * 60 * 1000); // 4.5 минути
+
       return true;
 
 
@@ -51,9 +56,29 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("access")
       localStorage.removeItem("refresh")
 
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+            refreshInterval = null;
+
+        }
+
 
 
     },
+       async refreshTokenAction() {
+      if (!this.refreshToken) return
+      try {
+        const res = await axiosЕТ.post('/auth/refresh/', {
+          refresh: this.refreshToken
+        })
+        this.accessToken = res.data.access
+        localStorage.setItem('access', this.accessToken)
+      } catch (err) {
+        // ако не става refresh -> logout
+        this.logout()
+      }
+    },
+
     async fetchCurrentUser(){
         const response = await currentUser()
         this.user = response;

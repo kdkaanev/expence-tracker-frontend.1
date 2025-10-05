@@ -31,7 +31,7 @@ export async function currentUser() {
 export async function updateProfile(profileData) {
   const token = localStorage.getItem("access");
   const res = await axiosET.patch(
-      "me/",
+      "me/profile/",
       profileData,
       { headers: { Authorization: `Bearer ${localStorage.getItem("access")}` } }
       )
