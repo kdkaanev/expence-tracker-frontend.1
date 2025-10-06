@@ -3,9 +3,13 @@
     import { useAuthStore } from "../store/authStore";
     import Inputs from "./ui/Inputs.vue";
     import Button from "./ui/Button.vue";
+    import  { useRouter } from "vue-router";
 
 
-    
+
+
+
+    const router = useRouter();
     const authStore = useAuthStore();
     const formData = ref({
       first_name: "",
@@ -25,6 +29,8 @@
       try {
         await authStore.updateProfile(formData.value);
         alert("Profile updated successfully!");
+        router.push("/");
+        
       } catch (error) {
         console.error("Error updating profile:", error);
         alert("Failed to update profile. Please try again.");

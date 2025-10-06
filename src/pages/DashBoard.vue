@@ -77,6 +77,13 @@ const transactions = [
             .sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date))
             .slice(0, 3);
     });
+    const firstName = computed(() => {
+        if (authStore.user && authStore.user.profile) {
+            return `${authStore.user.profile.first_name}`;
+        }
+        return authStore.user.email ;
+    });
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
 </script>
 
 <template>
@@ -85,8 +92,8 @@ const transactions = [
         <article class="container">
              
            <section class="title">
-            <h1 v-if="authStore.user.email">Welcome, {{ authStore.user.email }}</h1>
-            <p>your financial review for September.</p>
+            <h1 v-if="authStore.user.email">Welcome, {{ firstName }}</h1>
+            <p>your financial review for {{ currentMonth }}.</p>
            </section>
            <div class="info">
             <section class="card odd">
