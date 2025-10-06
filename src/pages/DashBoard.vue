@@ -13,6 +13,10 @@
 
     const transactionStore = useTransactionStore();
     onMounted(async() => {
+      if (!authStore.isAuthenticated) {
+            window.location.href = '/auth/login';
+            return;
+        }
       await authStore.fetchCurrentUser()
         await transactionStore.fetchTransactions();
 
@@ -81,7 +85,7 @@ const transactions = [
         <article class="container">
              
            <section class="title">
-            <h1>Welcome, {{ authStore.user.email }}</h1>
+            <h1 v-if="authStore.user.email">Welcome, {{ authStore.user.email }}</h1>
             <p>your financial review for September.</p>
            </section>
            <div class="info">

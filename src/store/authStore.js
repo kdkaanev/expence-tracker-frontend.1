@@ -3,6 +3,7 @@ import {loginUser, registerUser, currentUser, updateProfile} from "../services/a
 import { jwtDecode}  from "jwt-decode";
 import {useRouter} from "vue-router";
 import axiosЕТ from "../config/axiosinstance.js"
+import { ro } from "date-fns/locale";
 
 const router = useRouter();
 
@@ -32,7 +33,15 @@ export const useAuthStore = defineStore("auth", {
       localStorage.setItem("access", accessToken)
       localStorage.setItem("refresh", refreshToken)
 
-      refreshInterval = setIntervval(this.refreshTokenAction, 4.5 * 60 * 1000); // 4.5 минути
+      if (refreshInterval) {
+            clearInterval(refreshInterval);
+            refreshInterval = window.setInterval(() => {
+                this.refreshTokenAction();
+            }, 4 * 60 * 1000); // на всеки 4 минути
+            
+        }
+        await this.initAuth();
+     
 
       return true;
 
