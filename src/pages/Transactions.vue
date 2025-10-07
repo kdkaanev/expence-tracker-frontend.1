@@ -33,7 +33,8 @@
     });
     const formDataCategory = ref({
         id: null,
-        name: ""
+        name: "",
+        type: ""
     });
     const formattedDate = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
     const transactions = [
@@ -116,7 +117,7 @@
 
     
     const addCategory = async () => {
-        if (!newCategoryName.value.trim()) {
+        if (!newCategoryName.value) {
             alert("Category name cannot be empty.");
             return;
         }
@@ -245,6 +246,10 @@
                             <span class="close" @click="showCategoryModal=false">&times;</span>
                             <h2>Add New Category</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
+                            <select v-model="newCategoryName">
+                              <option>Income</option>
+                              <option>Expense</option>
+                            </select>
                             <div class="btn">
                                 <Button variant="primary" @click="addCategory">Add Category</Button>
                                 <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
