@@ -124,7 +124,11 @@
         if (isSubmitting.value) return;
         isSubmitting.value = true;
         try {
-            await categoryStore.createCategory({ name: newCategoryName.value });
+            await categoryStore.createCategory({
+                name: newCategoryName.value ,
+                type: formDataCategory.value.type
+                
+                });
             newCategoryName.value = "";
             showCategoryModal.value = false;
             await categoryStore.fetchCategories(); // Refresh categories after adding a new one
@@ -246,7 +250,7 @@
                             <span class="close" @click="showCategoryModal=false">&times;</span>
                             <h2>Add New Category</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
-                            <select v-model="newCategoryName">
+                            <select v-model="formDataCategory.type">
                               <option>Income</option>
                               <option>Expense</option>
                             </select>
