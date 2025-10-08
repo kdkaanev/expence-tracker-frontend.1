@@ -92,7 +92,7 @@ const transactions = [
         <article class="container">
              
            <section class="title">
-            <h1 v-if="authStore.user.profile">Welcome, {{ firstName }}</h1>
+            <h1 v-if="firstName">Welcome, {{ firstName }}</h1>
             <h1 v-else>Welcome, {{ authStore.user.email }}</h1>
             <p>your financial review for {{ currentMonth }}.</p>
            </section>

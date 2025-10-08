@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted, watch, nextTick } from "vue";
+    import { ref, onMounted, watch, nextTick, computed } from "vue";
     import { useTransactionStore } from "../store/transactionsStore.js";
     import { useCategoryStore } from "../store/categoryStore.js";
     import Button from "../components/ui/Button.vue";
@@ -29,12 +29,13 @@
         description: "",
         transaction_date: "2025-09-18T12:34:56.789Z",
         amount: 0,
-        category: ""
+        category: "",
+        type: ""
     });
     const formDataCategory = ref({
         id: null,
         name: "",
-        type: ""
+        
     });
     const formattedDate = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
     const transactions = [
@@ -100,6 +101,12 @@
            await transactionStore.deleteTransaction(id);
         }
     };
+    const positiveTransactions = computed(() => {
+        return transactionStore.transactions.filter(t => t.type === 'income');
+    });
+    const negativeTransactions = computed(() => {
+        return transactionStore.transactions.filter(t => t.type === 'expense');
+    });
 
     const getCategotyName = (categoryId) => {
         const category = categoryStore.categories.find(cat => cat.id === categoryId);
@@ -143,6 +150,7 @@
     function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
 }
+
    
    
 
@@ -202,7 +210,11 @@
                         <td>{{ transaction.transaction_date}}</td>
                         <td>{{ transaction.description }}</td>
 
-                      <td> {{ transaction.amount}}</td>
+                      <td>
+                        <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) }">
+                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}${{ Math.abs(transaction.amount).toFixed(2) }}
+                    </span>
+                </td>
                        
                         
                         <td class="center">
@@ -227,6 +239,12 @@
                    <input type="date" v-model="formData.transaction_date" />
                    <label>Amount:</label>
                    <input type="number" v-model="formData.amount" placeholder="Amount" />
+                    <label >Transaction Type:</label>
+                   <select v-model="formData.type">
+                        <option disabled value="">Select </option>
+                       <option value="income">Income</option>
+                       <option value="expense">Expense</option>
+                   </select>
                      <label>Category:</label>
                      <select v-model="formData.category">
                         <option disabled value="">Select Category</option>
@@ -250,10 +268,8 @@
                             <span class="close" @click="showCategoryModal=false">&times;</span>
                             <h2>Add New Category</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
-                            <select v-model="formDataCategory.type">
-                              <option>Income</option>
-                              <option>Expense</option>
-                            </select>
+                            
+                        
                             <div class="btn">
                                 <Button variant="primary" @click="addCategory">Add Category</Button>
                                 <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
@@ -313,5 +329,8 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+}
+.negative {
+    color: red;
 }
 </style>
