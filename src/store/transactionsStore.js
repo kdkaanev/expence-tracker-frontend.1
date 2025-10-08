@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 import axiosET from "../config/axiosinstance";
 import { categoryIcons } from "../services/categoryIcons";
 
@@ -7,6 +8,14 @@ export const useTransactionStore = defineStore("transaction", {
         transactions: [],
         loading: false,
     }),
+    getters: {
+        positiveTransactions(state) {
+            return state.transactions.filter(t => t.type === 'income');
+        },
+        negativeTransactions(state) {
+            return state.transactions.filter(t => t.type === 'expense');
+        }
+    },
     actions: {
         async fetchTransactions() {
             this.loading = true;

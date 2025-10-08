@@ -1,5 +1,7 @@
 <script setup>
-    import { ref, onMounted, watch, nextTick, computed } from "vue";
+    import { ref, onMounted, watch, nextTick, computed, } from "vue";
+    import { storeToRefs } from 'pinia'
+
     import { useTransactionStore } from "../store/transactionsStore.js";
     import { useCategoryStore } from "../store/categoryStore.js";
     import Button from "../components/ui/Button.vue";
@@ -101,12 +103,13 @@
            await transactionStore.deleteTransaction(id);
         }
     };
-    const positiveTransactions = computed(() => {
-        return transactionStore.transactions.filter(t => t.type === 'income');
-    });
-    const negativeTransactions = computed(() => {
-        return transactionStore.transactions.filter(t => t.type === 'expense');
-    });
+    // const positiveTransactions = computed(() => {
+    //     return transactionStore.transactions.filter(t => t.type === 'income');
+    // });
+    // const negativeTransactions = computed(() => {
+    //     return transactionStore.transactions.filter(t => t.type === 'expense');
+    // });
+    const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
 
     const getCategotyName = (categoryId) => {
         const category = categoryStore.categories.find(cat => cat.id === categoryId);
@@ -211,7 +214,7 @@
                         <td>{{ transaction.description }}</td>
 
                       <td>
-                        <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) }">
+                        <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) , 'positive': positiveTransactions.includes(transaction) }">
                         {{ negativeTransactions.includes(transaction) ? '-' : '+' }}${{ Math.abs(transaction.amount).toFixed(2) }}
                     </span>
                 </td>
@@ -332,5 +335,13 @@
 }
 .negative {
     color: red;
+}
+.positive {
+    color: green;
+}
+.amount {
+    font-weight: bold;
+    font-size: 1.1rem;
+    
 }
 </style>

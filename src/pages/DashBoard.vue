@@ -1,5 +1,7 @@
 <script setup>
     import { useAuthStore } from '../store/authStore';
+    import { storeToRefs } from 'pinia'
+
     import NavBar from '../components/NavBar.vue';
     import { categoryIcons } from "../services/categoryIcons.js";
     import DonuutChart from '../components/charts/DonuutChart.vue';
@@ -12,6 +14,12 @@
     const authStore = useAuthStore();
 
     const transactionStore = useTransactionStore();
+    const transactions = ref([]);
+    const totalIncomeAmount = ref(0);
+    const totalExpenseAmount = ref(0);
+    const budget = ref(0);
+    const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
+
     onMounted(async() => {
       if (!authStore.isAuthenticated) {
             window.location.href = '/auth/login';
@@ -19,36 +27,63 @@
         }
       await authStore.fetchCurrentUser()
         await transactionStore.fetchTransactions();
+        console.log(totalIncomingThisMonth.value, totalOutgoingThisMonth.value);
 
     });
 
+    
+    const incomingTransactions = computed(() => {
+        return transactionStore.transactions.filter(t => t.type === 'income');
+        
+    });
+    const outgoingTransactions = computed(() => {
+        return transactionStore.transactions.filter(t => t.type === 'expense');
+        
+    });
+    const totalIncome = computed(() => {
+        return incomingTransactions.value.reduce((sum, t) => sum + Number(t.amount), 0);
+    });
+    const totalExpense = computed(() => {
+        return outgoingTransactions.value.reduce((sum, t) => sum + Number(t.amount), 0);
+    });
+    const balance = computed(() => {
+        return totalIncome.value - totalExpense.value;
+    });
+    const incomingThisMonth = computed(() => {
+        const now = new Date();
+        return incomingTransactions.value.filter(t => {
+            const tDate = new Date(t.transaction_date);
+            return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+        });
+    });
 
+  const outgoingThisMonth = computed(() => {
+        const now = new Date();
+        return outgoingTransactions.value.filter(t => {
+            const tDate = new Date(t.transaction_date);
+            return tDate.getMonth() === now.getMonth() && tDate.getFullYear() === now.getFullYear();
+        });
+    });
+    const totalIncomingThisMonth = computed(() => {
+        return incomingThisMonth.value.reduce((sum, t) => sum + Number(t.amount), 0);
+    });
+    const totalOutgoingThisMonth = computed(() => {
+        return outgoingThisMonth.value.reduce((sum, t) => sum + Number(t.amount), 0);
+    });
+    const balanceThisMonth = computed(() => {
+        return totalIncomingThisMonth.value - totalOutgoingThisMonth.value;
+    });
 
-const transactions = [
-    { id: 1, category: 'Grocery', amount: 50.0, date:'2025-09-10', type: 'expense', icon: 'fas fa-envelope' },
-    { id: 2, category: 'Salary', amount: 3000.0, date:'2025-09-11', type: 'income', icon: 'fas fa-money-bill' },
-    { id: 3, category: 'Electricity Bill', amount: 100.0, date:'2025-09-11', type: 'expense', icon: 'fas fa-bolt' },
-];
-    const props = defineProps({
-    categories: {
-      type: Array,
-      default: () => ['Savings', 'Expenses', 'Investments'],
-    },
-    values: {
-      type: Array,
-      default: () => [300, 500, 200],
-    },
-  });
-  const chartData = {
-    labels: props.categories,
+  const chartData = computed(() => ({
+    labels: ['Spent', 'Remaining Budget'],
     datasets: [
       {
-        data: props.values,
-        backgroundColor: ['#27ae60', '#f39c12', 'e74c3c'],
-        borderWidth: 2,
+        data: [totalExpense.value, balanceThisMonth.value],
+        backgroundColor: ['#46a9ff', '#27ae60'],
+        hoverBackgroundColor: ['#36a2eb', '#27ae60'],
       },
-    ],
-  };
+    ]
+  }));
 
   const chartOptions = {
     responsive: true,
@@ -62,12 +97,16 @@ const transactions = [
           font: { size: 14 },
 
       },
-    }
+    },
+    centerText: {
+        text: `${balanceThisMonth.value}`,
+        color: '#333',
+        font: { size: '20' },
+      },
     },
   };
-  const budget = computed(() => {
-    return props.values.reduce((total, value) => total + value, 0);
-  });
+
+  
 
      function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
@@ -99,19 +138,19 @@ const transactions = [
            <div class="info">
             <section class="card odd">
                 <h2>Total Balance</h2>
-                <p>$5,000.00</p>
+                <p>${{ balance }}</p>
             </section>
             <section class="card even">
                 <h2>Income this month</h2>
-                <p>$3,000.00</p>
+                <p>${{ totalIncomingThisMonth }}</p>
             </section>
             <section class="card even">
                 <h2>Expenses this month</h2>
-                <p>$1,500.00</p>
+                <p>${{ totalOutgoingThisMonth }}</p>
             </section>
             <section class="card odd">
                 <h2>Saving</h2>
-                <p>$1,500.00</p>
+                <p>${{ balance }}</p>
             </section>
            
            </div>
@@ -124,7 +163,7 @@ const transactions = [
               </div>
              
             
-              <LineChart />
+              
 
 
            </section>
@@ -142,7 +181,11 @@ const transactions = [
                         <td>{{ transaction.transaction_date}}</td>
                         <td>{{ transaction.description }}</td>
 
-                      <td> {{ transaction.amount}}</td>
+                      <td> 
+                        <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) , 'positive': positiveTransactions.includes(transaction) }">
+                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}${{ Math.abs(transaction.amount).toFixed(2) }}
+                    </span>
+                      </td>
                        
                         
                         
@@ -269,6 +312,17 @@ const transactions = [
 }
 .capitalize{
     text-transform: capitalize;
+}
+.negative {
+    color: red;
+}
+.positive {
+    color: green;
+}
+.amount {
+    font-weight: bold;
+    font-size: 1.1rem;
+    
 }
 </style>
 

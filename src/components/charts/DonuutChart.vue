@@ -3,9 +3,31 @@
   import { Doughnut} from 'vue-chartjs';
 
 
-  ChartJS.register(ArcElement, Tooltip, Legend,);
+ 
 
-  defineProps({
+ const centerTextPlugin = {
+  id: 'centerText',
+  afterDraw(chart) {
+    const { ctx, chartArea: { width, height } } = chart
+    ctx.save()
+
+    const fontSize = (height / 100).toFixed(2)
+    ctx.font = `${fontSize}em sans-serif`
+    ctx.textBaseline = 'middle'
+    ctx.fillStyle = '#333'
+    ctx.textAlign = 'center'
+
+    // Текстът, който ще се показва (взимаме го от chart.config.options.plugins.centerText)
+    const text = chart.config.options.plugins.centerText?.text || ''
+    const textX = width / 2 + chart.chartArea.left
+    const textY = height / 2 + chart.chartArea.top
+
+    ctx.fillText(text, textX, textY)
+    ctx.restore()
+  }
+}
+ChartJS.register(ArcElement, Tooltip, Legend, centerTextPlugin);
+defineProps({
   chartData: {
     type: Object,
     required: true,

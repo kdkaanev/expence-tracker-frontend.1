@@ -9,8 +9,11 @@ const router = useRouter();
 const showProfilePopUp = ref(false);
 const popupRef = ref(null);
 
-
-
+ const name = ref('');
+const getFirstLetter = (name) => {
+    if (!name) return 'A';
+    return name.charAt(0).toUpperCase();
+};
 
 const toggleProfilePopUp = () => {
     showProfilePopUp.value = !showProfilePopUp.value;
@@ -19,12 +22,14 @@ const toggleProfilePopUp = () => {
 const handleClickOutside = (event) => {
     if (popupRef.value && !popupRef.value.contains(event.target)) {
         showProfilePopUp.value = false;
-    }
+    } 
 };
 
-onMounted(() => {
+onMounted(() =>  {
+    
     document.addEventListener("click", handleClickOutside);
 });
+
 
 onBeforeUnmount(() => {
     document.removeEventListener("click", handleClickOutside);
@@ -39,7 +44,7 @@ onBeforeUnmount(() => {
             class="primary"
             @click.stop="toggleProfilePopUp"
             >
-            <span class="lether">F</span>
+            <span class="lether">{{ getFirstLetter(name) }}</span>
         </button>
         <div 
             v-if="showProfilePopUp"
