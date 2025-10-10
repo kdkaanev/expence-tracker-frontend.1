@@ -36,16 +36,18 @@ const goToEdit = () => {
         <p><strong>Last Name:</strong> {{ authStore.user.profile.last_name }}</p>
         <p><strong>Email:</strong> kk@kk.kk</p>
         <div class="link">
-            <a  @click="onLogout">logout</a>
+           
             <a @click="goToEdit">edit</a>
 
         </div>
+         
 
 
     
        
         <!-- Add more user details as needed -->
     </div>
+    <a  @click="onLogout">logout</a>
     </div>
 </template>
 

@@ -62,8 +62,8 @@ export const useAuthStore = defineStore("auth", {
       this.accessToken = null
       this.refreshToken = null
       this.user = null
-      localStorage.removeItem("access")
-      localStorage.removeItem("refresh")
+      localStorage.removeItem("access", this.accessToken)
+      localStorage.removeItem("refresh", this.refreshToken )
 
         if (refreshInterval) {
             clearInterval(refreshInterval);

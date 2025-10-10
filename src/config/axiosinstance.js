@@ -49,8 +49,8 @@ axiosET.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccess}`
         return axiosET(originalRequest)
       } catch (refreshError) {
-        localStorage.removeItem("access")
-        localStorage.removeItem("refresh")
+        localStorage.removeItem("access", newAccess)
+        localStorage.removeItem("refresh", refresh)
         return Promise.reject(refreshError)
       }
     }

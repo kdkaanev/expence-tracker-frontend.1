@@ -88,7 +88,7 @@
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    cutout: '60%',
+    cutout: '80%',
     plugins: {
       legend: {
         position: 'bottom',

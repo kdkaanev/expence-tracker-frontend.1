@@ -39,7 +39,7 @@
         name: "",
         
     });
-    const formattedDate = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
+    
     const transactions = [
     { id: 1, category: 'Grocery', amount: 50.0, created_at:'2025-09-10', description:"Very Good", type: 'expense', icon: 'fas fa-envelope' },
     { id: 2, category: 'Salary', amount: 3000.0, created_at:'2025-09-11', description: "Mnogo malka", type: 'income', icon: 'fas fa-money-bill' },
@@ -87,7 +87,7 @@
            alert("Please fill all fields correctly.");
            return;
        }
-       formData.value.transaction_date = formattedDate
+       formData.value.transaction_date = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
        if (editMode.value) {
            await transactionStore.updateTransaction(formData.value);
        } else {
