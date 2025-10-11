@@ -5,7 +5,7 @@ import { ref, watch } from 'vue';
 
 const props = defineProps({
   categories: Array,
-  selectedCategory: String,
+  selectedCategory: [String, Number],
   startOfDay: String,
   endOfDay: String,
 });
@@ -32,8 +32,8 @@ watch([localCategory, localStartOfDay, localEndOfDay], () => {
     <div class="filter">
         <select v-model="localCategory">
             <option value="">All Categories</option>
-            <option v-for="category in categories" :key="category" :value="category">
-            {{ category }}
+            <option v-for="category in categories" :key="category.id" :value="category.id" class="capitalize">
+            {{ category.name}}
             </option>
         </select>
     
@@ -68,6 +68,9 @@ select {
 }
 input[type="date"] {
   width: 200px;
+}
+.capitalize {
+  text-transform: capitalize;
 }
 
 

@@ -31,13 +31,14 @@ const goToEdit = () => {
 <template>
     <div class="pop-up">
         <h2>User Profile</h2>
-        <div v-if="authStore.user.profile">
+        <div v-if="authStore.user && authStore.user.profile ">
           <p><strong>First Name:</strong> {{ authStore.user.profile.first_name }}</p>
         <p><strong>Last Name:</strong> {{ authStore.user.profile.last_name }}</p>
         <p><strong>Email:</strong> kk@kk.kk</p>
         <div class="link">
            
             <a @click="goToEdit">edit</a>
+            <a  @click="onLogout">logout</a>
 
         </div>
          
@@ -47,7 +48,9 @@ const goToEdit = () => {
        
         <!-- Add more user details as needed -->
     </div>
-    <a  @click="onLogout">logout</a>
+        <div v-else>
+             <a  @click="onLogout">logout</a>
+        </div>
     </div>
 </template>
 

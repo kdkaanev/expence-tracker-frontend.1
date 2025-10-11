@@ -17,6 +17,7 @@
     
 
     const transactionStore = useTransactionStore();
+   
     const categoryStore = useCategoryStore();
     const isSubmitting = ref(false)
     const showModal = ref(false);
@@ -25,7 +26,19 @@
     const selectedCategory = ref("");
     const newCategoryName = ref("");
     const addFormRef = ref(null);
-    const categoryModalRef = ref(null);
+  
+
+const transactions =computed(() => transactionStore.transactions);
+const categories = computed(() => {
+    const unique = new Map();
+    transactions.value.forEach(t => {
+        if (!unique.has(t.category)) {
+            unique.set(t.category, { id: t.category, name: t.category_name });
+        }
+    });
+    return Array.from(unique.values());
+});
+
     const formData = ref({
         id: null,
         description: "",
@@ -39,17 +52,36 @@
         name: "",
         
     });
+
+    const filters = ref({
+        category: "",
+        startOfDay: "",
+        endOfDay: ""
+    });
+const handleFilterUpdate = (newFilters) => {
+    filters.value = newFilters
+};
+
+const filteredTransactions = computed(() => {
+   return transactions.value.filter(t => {
+        const matchCategory = !filters.value.category || t.category === Number(filters.value.category);
+        const transactionDate = new Date(t.transaction_date);
+        const matchStart = !filters.value.startOfDay || transactionDate >= new Date(filters.value.startOfDay);
+        const matchEnd = !filters.value.endOfDay || transactionDate <= new Date(filters.value.endOfDay);
+
+        return matchCategory && matchStart && matchEnd;
+    });
+});
+
     
-    const transactions = [
-    { id: 1, category: 'Grocery', amount: 50.0, created_at:'2025-09-10', description:"Very Good", type: 'expense', icon: 'fas fa-envelope' },
-    { id: 2, category: 'Salary', amount: 3000.0, created_at:'2025-09-11', description: "Mnogo malka", type: 'income', icon: 'fas fa-money-bill' },
-    { id: 3, category: 'Electricity Bill', amount: 100.0, created_at:'2025-09-11', description: "mnogo golqma", type: 'expense', icon: 'fas fa-bolt' },
-];
+
+
+
 
     onMounted(async() => {
         await transactionStore.fetchTransactions();
         await categoryStore.fetchCategories();
-    });
+    })
 
     const openAddModal = async () => {
         editMode.value = false;
@@ -95,6 +127,7 @@
        }
       }finally {
         isSubmitting.value = false;
+        showModal.value = false;
       }
     };
 
@@ -167,23 +200,25 @@
                 categoryModalRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
-
-
-    });
+    }); 
 </script>
 
 <template>
     <article>
         <section class="container">
             <h1 class="text">Transactions</h1>
-            <TransactionFilter
-                :categories="categoryStore.categories.map(cat => cat.name)"
-                :selectedCategory="selectedCategory"
-                @update:filter="(filter) => {
-                    selectedCategory = filter.category;
-                    transactionStore.fetchTransactions(filter);
-                }"
-            />  
+            <div>
+                <TransactionFilter
+                :categories="categories"
+                :selectedCategory="filters.category"
+                :startOfDay="filters.startOfDay"
+                :endOfDay="filters.endOfDay"
+                @update:filter="handleFilterUpdate"
+            />
+
+            
+            </div>
+            
           
 
 
@@ -202,7 +237,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <tr v-for="transaction in transactionStore.transactions" :key="transaction.id">
+                   <tr v-for="transaction in filteredTransactions" :key="transaction.id">
                    <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
                         <td><div class="cat-name">
                           <font-awesome-icon
