@@ -5,28 +5,27 @@ import LineChart from '../components/charts/LineChart.vue';
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useBudgetStore } from '../store/budgetStore';
+
+const budgetStore = useBudgetStore();
+
+onMounted(() => {
+    budgetStore.fetchBudgets();
+});
 
 
-    const budgetData = [
-        { category: 'Food', limit: 300, spent: 150, icon: 'fas fa-utensils' },
-        { category: 'Transport', limit: 100, spent: 60, icon: 'fas fa-bus' },
-        { category: 'Entertainment', limit: 150, spent: 80, icon: 'fas fa-film' },
-        { category: 'Utilities', limit: 200, spent: 120, icon: 'fas fa-lightbulb' },
-        { category: 'Health', limit: 100, spent: 40, icon: 'fas fa-heartbeat' },
-        { category: 'Shopping', limit: 250, spent: 200, icon: 'fas fa-shopping-cart' },
-    ];
-    const props = defineProps({
+
+const props = defineProps({
     categories: {
-      type: Array,
-      default: () => ['Food', 'Transport', 'Entertainment', 'Utilities', 'Health', 'Shopping'],
+        type: Array,
+        default: () => ['Food', 'Transport', 'Entertainment', 'Utilities', 'Health', 'Others'],
     },
     values: {
-      type: Array,
-      default: () => [300, 100,],
+        type: Array,
+        default: () => [300, 150, 200, 100, 250, 100],
     },
-    
-    });
+});
     const chartData = {
     labels: props.categories,
     datasets: [
@@ -50,7 +49,7 @@ import { computed } from 'vue';
     };
 
     const budgetStatus = (category) => {
-        const budget = budgetData.find(b => b.category === category);
+        const budget = budgetStore.budgets.find(b => b.category === category);
         if (budget) {
             const used = ((budget.spent / budget.limit) * 100).toFixed(0);
             return { used: used > 100 ? 100 : used, remaining: budget.limit - budget.spent };
@@ -73,7 +72,7 @@ import { computed } from 'vue';
                     </div>
                 </section>
                 <section class="budget-list">
-                    <div  v-for="item in budgetData" :key="item.category" class="card budget-item">
+                    <div  v-for="item in budgetStore.budgets" :key="item.category" class="card budget-item">
                         <i :class="item.icon" class="icon"></i>
                         <div class="budget-details">
                         
