@@ -12,7 +12,7 @@ const budgetService = {
 
   createBudget: async (budgetData) => {
     try {
-      const response = await axiosET.post("/budgets", budgetData);
+      const response = await axiosET.post("api/budgets/", budgetData);
       return response.data;
     } catch (error) {
       throw error;
@@ -21,7 +21,7 @@ const budgetService = {
 
   updateBudget: async (budgetId, budgetData) => {
     try {
-      const response = await axiosET.put(`/budgets/${budgetId}`, budgetData);
+      const response = await axiosET.put(`api/budgets/${budgetId}`, budgetData);
       return response.data;
     } catch (error) {
       throw error;
@@ -30,7 +30,7 @@ const budgetService = {
 
   deleteBudget: async (budgetId) => {
     try {
-      const response = await axiosET.delete(`/budgets/${budgetId}`);
+      const response = await axiosET.delete(`api/budgets/${budgetId}`);
       return response.data;
     } catch (error) {
       throw error;

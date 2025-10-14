@@ -242,7 +242,7 @@ const filteredTransactions = computed(() => {
                         <td><div class="cat-name">
                           <font-awesome-icon
                             :icon="getIcon(transaction.category_name)"
-                            class="text-blue-500 w-5 h-5"
+                            class="icon"
                         /><span class="capitalize">{{transaction.category_name}}</span>
                         </div> </td>
                         <td>{{ transaction.transaction_date}}</td>
