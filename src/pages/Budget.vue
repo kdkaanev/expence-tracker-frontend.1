@@ -5,16 +5,19 @@ import LineChart from '../components/charts/LineChart.vue';
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watchEffect } from 'vue';
 import { useBudgetStore } from '../store/budgetStore';
 import { ref } from 'vue';
 import { useTransactionStore } from '../store/transactionsStore';
 import { useCategoryStore } from '../store/categoryStore';
 import {generateColorShades} from '../utiles/generateColor.js';
+import { storeToRefs } from 'pinia';
 const budgetStore = useBudgetStore();
 const transactionStore = useTransactionStore();
 const categoryStore = useCategoryStore();
 const addFormRef = ref(null);
+const chartColors = ref([]);
+const { budgets } = storeToRefs(budgetStore);
 
 const showModal = ref(false);
 
@@ -74,29 +77,24 @@ const addBudget = async() => {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
 }
 
+watchEffect(() => {
+    chartColors.value = generateColorShades(120, budgets.value.length);
+});
 
 
 
 
-const chartColors = generateColorShades(120, budgetStore.budgets.length);
 
-const chartData = computed(() => {
-        const labels = budgetStore.budgets.map(b => {
-            const category = categoryStore.categories.find(c => c.id === b.category);
-            return category ? category.name : 'Unknown';
-        });
-        const data = budgetStore.budgets.map(b => b.amount);
-        return {
-            labels,
-            datasets: [
-                {
-                    data,
-                    backgroundColor: chartColors,
-                    borderWidth: 1,
-                },
-            ],
-        };
-    });
+const chartData = computed(() => ({
+    labels: budgets.value.map(b => b.category_name),
+    datasets: [
+        {
+            data: budgets.value.map(b => b.amount),
+            backgroundColor: chartColors.value,
+            borderWidth: 1,
+        },
+    ]
+}));
 const chartOptions = {
         responsive: true,
         plugins: {
@@ -118,9 +116,11 @@ const chartOptions = {
     const budgetStatus = (category) => {
         const budget = budgetStore.budgets.find(b => b.category === category);
         if (budget) {
+         
             const used = ((budget.spent / budget.amount) * 100).toFixed(0);
             return { used: used > 100 ? 100 : used, remaining: budget.amount - budget.spent };
         }
+        
         return { used: 0, remaining: 0 };
     };
     const totalBudget = computed(() => {
@@ -155,9 +155,8 @@ const chartOptions = {
                             <h3 class="capitalize">{{ item.category_name }}</h3>
                     
                             <HorizontalBar
-                                :firsst-value="(budgetStatus(item.category).used)"
-                                first-color="#22c55e"
-                                second-color="#46a9ff"
+                            :category="item.category_name"
+                            :statusFn="budgetStatus"
                             />
 
                             <div class="summ">

@@ -1,5 +1,6 @@
 <script setup>
     import { Chart as ChartJS,Title,Tooltip,Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import { ca } from 'date-fns/locale';
 import { computed } from 'vue';
     import { Bar } from 'vue-chartjs';
 
@@ -7,29 +8,27 @@ import { computed } from 'vue';
 
 
      const props = defineProps({
-       firsstValue: {
-         type: Number,
-         required: true,
-       },
-       firstColor: {
-         type: String,
-         default: '#22c55e',
-       },
-       secondColor: {
-         type: String,
-         default: '#ef4444',
-       },
+      category: {
+        type: String,
+        required: true
+      },
+      statusFn: {
+        type: Function,
+        required: true
+      }
      });
 
+     
 
+    const status = computed(() => props.statusFn(props.category) || { used: 0, total: 0 });
 
 </script>
 
 
 <template>
     <div class="bar-container">
-        <div class="bar" :style="{ width: firsstValue + '%', backgroundColor: firstColor }"></div>
-        <div class="bar" :style="{ width: (100 - firsstValue) + '%', backgroundColor: secondColor }"></div>
+        <div class="bar" :style="{ width: status + '%', backgroundColor: progressBackground }"></div>
+        
         
     </div>
 </template>
