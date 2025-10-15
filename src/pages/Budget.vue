@@ -10,7 +10,7 @@ import { useBudgetStore } from '../store/budgetStore';
 import { ref } from 'vue';
 import { useTransactionStore } from '../store/transactionsStore';
 import { useCategoryStore } from '../store/categoryStore';
-
+import {generateColorShades} from '../utiles/generateColor.js';
 const budgetStore = useBudgetStore();
 const transactionStore = useTransactionStore();
 const categoryStore = useCategoryStore();
@@ -77,36 +77,42 @@ const addBudget = async() => {
 
 
 
-const props = defineProps({
-    categories: {
-        type: Array,
-        default: () => ['Food', 'Transport', 'Entertainment', 'Utilities', 'Health', 'Others'],
-    },
-    values: {
-        type: Array,
-        default: () => [300, 150, 200, 100, 250, 100],
-    },
-});
-    const chartData = {
-    labels: props.categories,
-    datasets: [
-      {
-        data: props.values,
-        backgroundColor: ['#27ae60', ],
-        borderWidth: 2,
-      },
-    ],
-    };
-    const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '80%',
-    plugins: {
-      legend: {
-        display: false,
-       
-    }
-    },
+
+const chartColors = generateColorShades(120, budgetStore.budgets.length);
+
+const chartData = computed(() => {
+        const labels = budgetStore.budgets.map(b => {
+            const category = categoryStore.categories.find(c => c.id === b.category);
+            return category ? category.name : 'Unknown';
+        });
+        const data = budgetStore.budgets.map(b => b.amount);
+        return {
+            labels,
+            datasets: [
+                {
+                    data,
+                    backgroundColor: chartColors,
+                    borderWidth: 1,
+                },
+            ],
+        };
+    });
+const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'right',
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        return `${label}: $${value}`;
+                    },
+                },
+            },
+        },
     };
 
     const budgetStatus = (category) => {
@@ -130,7 +136,9 @@ const props = defineProps({
             
             <div class="leftside">
                 <section class="card">
-                    <DonuutChart class="donut" :chart-data="chartData" :chart-options="chartOptions" />
+                    <DonuutChart class="donut" 
+                    :chart-data="chartData" 
+                    :chart-options="chartOptions" />
                     <div class="summary">
                         <p>Total Budget</p>
                         <h3>{{ totalBudget }}</h3>

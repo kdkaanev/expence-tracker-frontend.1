@@ -1,6 +1,7 @@
 <script setup>
     import { useAuthStore } from '../store/authStore';
     import { storeToRefs } from 'pinia'
+    import { useBudgetStore } from '../store/budgetStore.js';
 
     import NavBar from '../components/NavBar.vue';
     import { categoryIcons } from "../services/categoryIcons.js";
@@ -12,7 +13,7 @@
     import { ref, onMounted, computed } from 'vue';
 
     const authStore = useAuthStore();
-
+    const budgetStore = useBudgetStore();
     const transactionStore = useTransactionStore();
     const transactions = ref([]);
     const totalIncomeAmount = ref(0);
@@ -74,11 +75,15 @@
         return totalIncomingThisMonth.value - totalOutgoingThisMonth.value;
     });
 
+    const totalBudgets = computed(() => {
+        return budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
+    });
+
   const chartData = computed(() => ({
     labels: ['Spent', 'Remaining Budget'],
     datasets: [
       {
-        data: [totalExpense.value, balanceThisMonth.value],
+        data: [totalExpense.value, totalBudgets.value - totalExpense.value],
         backgroundColor: ['#46a9ff', '#27ae60'],
         hoverBackgroundColor: ['#36a2eb', '#27ae60'],
       },
@@ -99,7 +104,7 @@
       },
     },
     centerText: {
-        text: `${balanceThisMonth.value}`,
+        text: `${totalBudgets.value ? `$${totalBudgets.value.toFixed(2)}` : '$0.00'}`,
         color: '#333',
         font: { size: '20' },
       },
