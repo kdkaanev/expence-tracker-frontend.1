@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import axiosET from "../config/axiosinstance";
 import { categoryIcons } from "../services/categoryIcons";
+import { eachDayOfInterval, endOfMonth, startOfMonth, format } from "date-fns";
 
 export const useTransactionStore = defineStore("transaction", {
     state: () => ({
@@ -14,8 +15,35 @@ export const useTransactionStore = defineStore("transaction", {
         },
         negativeTransactions(state) {
             return state.transactions.filter(t => t.type === 'expense');
+        }, 
+        daysOfMonth: () => {
+            const start = startOfMonth(new Date());
+            const end = endOfMonth(new Date());
+            return eachDayOfInterval({ start, end }).map(date => format(date, 'yyyy-MM-dd'));
+        },
+        dailyExpenses(state) {
+            const gruped = Object.fromEntries(Array.from(eachDayOfInterval({ start: startOfMonth(new Date()), end: endOfMonth(new Date()) })).map(date => [format(date, 'yyyy-MM-dd'), 0]));
+            state.transactions.forEach(tx => {
+                if (tx.type === 'expense' && gruped[tx.transaction_date ] !== undefined) {
+                    gruped[tx.transaction_date ] += parseFloat(tx.amount);
+                }       
+        })
+            return Object.values(gruped);
+        },
+
+        dailyExpensesByCategory: (state) => {
+            (categoryName) => {
+                const gruped = Object.fromEntries(Array.from(eachDayOfInterval({ start: startOfMonth(new Date()), end: endOfMonth(new Date()) })).map(date => [format(date, 'yyyy-MM-dd'), 0]));
+                state.transactions.forEach(tx => {
+                    if (tx.type === 'expense' && tx.category === categoryName && gruped[tx.transacton_date ] !== undefined) {
+                        gruped[tx.transacton_date ] += parseFloat(tx.amount);
+                    }       
+                })
+                return Object.values(gruped);
+            }
         }
     },
+
     actions: {
         async fetchTransactions() {
             this.loading = true;

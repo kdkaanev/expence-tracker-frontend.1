@@ -18,6 +18,7 @@ const categoryStore = useCategoryStore();
 const addFormRef = ref(null);
 const chartColors = ref([]);
 const { budgets } = storeToRefs(budgetStore);
+const { daysOfMonth, dailyExpenses } = storeToRefs(transactionStore);
 
 const showModal = ref(false);
 
@@ -95,6 +96,8 @@ const chartData = computed(() => ({
         },
     ]
 }));
+
+
 const chartOptions = {
         responsive: true,
         plugins: {
@@ -112,12 +115,44 @@ const chartOptions = {
             },
         },
     };
+    const chartBarData = computed(() => ({
+        labels: daysOfMonth.value.map(day => day.split('-')[2]),
+        datasets: [
+            {
+                label: Date().toLocaleString('default', { month: 'long' }),
+                backgroundColor: '#22c55e',
+                data: dailyExpenses.value,
+                borderRadius: 8,
+            },
+        ],
+    }));
+
+
+    const chartOptionsBar = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Daily Expenses',
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
+    
 
     const budgetStatus = (category) => {
         const budget = budgetStore.budgets.find(b => b.category === category);
         if (budget) {
          
-            const used = ((budget.spent / budget.amount) * 100).toFixed(0);
+            let used = ((Number(budget.spent) / Number(budget.amount)) * 100).toFixed(0);
+            used = Number(used);
             return { used: used > 100 ? 100 : used, remaining: budget.amount - budget.spent };
         }
         
@@ -155,8 +190,8 @@ const chartOptions = {
                             <h3 class="capitalize">{{ item.category_name }}</h3>
                     
                             <HorizontalBar
-                            :category="item.category_name"
-                            :statusFn="budgetStatus"
+                            :category="item.category"
+                            :status-fn="budgetStatus"
                             />
 
                             <div class="summ">
@@ -169,7 +204,11 @@ const chartOptions = {
                 </section>
             </div>
             <div class="rightside">
-                <BarChart />
+                <BarChart 
+                :chart-bar-data="chartBarData" 
+                :chart-options-bar="chartOptionsBar"
+                   
+                />
                 <Button 
                 variant="primary"
                 @click="openModal"
