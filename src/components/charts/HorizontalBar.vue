@@ -8,26 +8,47 @@ import { computed } from 'vue';
 
 
      const props = defineProps({
+       
       category: {
         type: Number,
         required: true
       },
+      value: {
+        type: Number,
+        required: false
+      },
+      total: {
+        type: Number,
+        required: false
+      },
       statusFn: {
         type: Function,
         required: true
+      },
+      mode : {
+        type: String,
+        required: false,
+        default: 'budget' 
       }
      });
 
      
 
-    const status = computed(() => props.statusFn(props.category));
-    const statusUsed = computed(() => status.value.used);
-    console.log(status.value.used);
+    
+    const statusUsed = computed(() => {
+        if (props.mode === 'budget' && props.statusFn && props.category) {
+            return props.statusFn(props.category).used;
+        } else if (props.mode === 'pot' && props.total) {
+            return ((props.value / props.total) * 100).toFixed(0);
+        }
+        return 0;
+    });
+   
     
     const progressBackground = computed(() => {
-        if (status.value.used >= 90) {
+        if (statusUsed.value.used >= 90) {
             return 'linear-gradient(90deg, #e63946, #ff7b00)'; 
-        } else if (status.value.used >= 70) {
+        } else if (statusUsed.value.used >= 70) {
             return '#ffb703'; // yellow
         } else {
             return '#26d926'; // Green

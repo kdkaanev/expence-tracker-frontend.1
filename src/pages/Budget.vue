@@ -155,6 +155,7 @@ const chartOptions = {
             used = Number(used);
             return { used: used > 100 ? 100 : used, remaining: budget.amount - budget.spent };
         }
+        console.log(used, remaining);
         
         return { used: 0, remaining: 0 };
     };
@@ -190,8 +191,10 @@ const chartOptions = {
                             <h3 class="capitalize">{{ item.category_name }}</h3>
                     
                             <HorizontalBar
+                            :key="item.id"
                             :category="item.category"
                             :status-fn="budgetStatus"
+                            mode="budget"
                             />
 
                             <div class="summ">

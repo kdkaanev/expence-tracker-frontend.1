@@ -34,9 +34,10 @@
                     <h3>{{ item.pot }}</h3>
                     <p>${{ item.saved }} / ${{ item.goal }}</p>
                     <HorizontalBar
-                        :firsst-value="potStatus(item.pot).progress"
-                        first-color="#3b82f6"
-                        second-color="#d1d5db"
+                        :key="item.id"
+                        :value="item.saved"
+                        :total="item.goal"
+                        mode="pot"
                     />
                     <p>{{ potStatus(item.pot).remaining }} remaining</p>
 
