@@ -41,7 +41,8 @@
                     />
                     <p>{{ potStatus(item.pot).remaining }} remaining</p>
 
-                    <Button variant="primary">Add Funds</Button>
+                    <Button variant="primary">Edit</Button>
+                    
                 </div>
             </div>
         </section>
