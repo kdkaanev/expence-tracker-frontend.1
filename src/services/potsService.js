@@ -19,10 +19,27 @@ const potsService = {
             throw error;
         }
     },
+
+    removePot: async (potId) => {
+        try {
+            await axiosET.delete(`api/pots/${potId}/`);
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    editPot: async (potId, potData) => {
+        try {
+            const response = await axiosET.put(`api/pots/${potId}/`, potData);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
     
     addFunds: async (potId, potData) => {
         try {
-            const response = await axiosET.put(`api/pots/${potId}/add_funds/`, potData);
+            const response = await axiosET.post(`api/pots/${potId}/add_funds/`, potData);
             return response.data;
         } catch (error) {
             throw error;
@@ -31,7 +48,7 @@ const potsService = {
 
     withdrawFunds: async (potId, potData) => {
         try {
-            const response = await axiosET.put(`api/pots/${potId}/withdraw_funds/`, potData);
+            const response = await axiosET.post(`api/pots/${potId}/withdraw_funds/`, potData);
             return response.data;
         } catch (error) {
             throw error;

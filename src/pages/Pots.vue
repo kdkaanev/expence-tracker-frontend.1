@@ -4,12 +4,16 @@
     import { usePotsStore } from '../store/potsStore';
     import Button from '../components/ui/Button.vue';
     import { computed } from 'vue';
+import { add } from 'date-fns';
 
     const potsStore = usePotsStore();
     const potsData = computed(() => potsStore.pots);
     const editMode = ref(false);
     const showModal = ref(false);
     const showEditModal = ref(false);
+    const formPotRef = ref(null);
+    const showAddFundsModal = ref(false);
+    const showWithdrawFundsModal = ref(false);
 
 
     onMounted(async () => {
@@ -19,14 +23,25 @@
 
 
     const formPot = ref({
+        id: null,
         pot: '',
         goal: 0,
-        
+       
     });
 
+    const formAddFunds = ref({
+        id: null,
+        addAmount: 0
+    });
+
+    const formWithdrawFunds = ref({
+        id: null,
+        withdrawAmount: 0
+    });
     const openAddPotModal = async () => {
         editMode.value = false;
         formPot.value = {
+            id: null,
             pot: '',
             goal: 0,
             
@@ -37,20 +52,74 @@
 
     const openEditModal = (pot) => {
         editMode.value = true;
-        formPot.value = { ...pot };
-        showEditModal.value = true;
+        formPot.value = {
+            id: pot.id,
+            pot: pot.pot,
+            goal: pot.goal,
+            
+        };
+        showModal.value = true;
+        console.log('Editing pot:', formPot.value);
+    };
+    const closeModal = () => {
+        showModal.value = false;
+        showEditModal.value = false;
+    };
+
+    const openAddFundsModal = (pot) => {
+        formAddFunds.value = {
+            id: pot.id,
+            addAmount: 0
+        };
+        showAddFundsModal.value = true;
+        
+
+        alert(`Open add funds modal for pot: ${pot.pot}`);
+    };
+
+
+
+    const openWithdrawFundsModal = (pot) => {
+        formWithdrawFunds.value = {
+            id: pot.id,
+            withdrawAmount: 0
+        };
+        showWithdrawFundsModal.value = true;
+        alert(`Open withdraw funds modal for pot: ${pot.pot}`);
     };
     const submitForm = async () => {
         if (editMode.value) {
-            // Update existing pot logic here
+            await potsStore.updatePot(formPot.value);
         } else {
-            await potsStore.addPot({
-                pot: formPot.value.pot,
-                goal: formPot.value.goal,
-                
-            });
+            await potsStore.addPot(formPot.value);
         }
-        showModal.value = false;
+        closeModal();
+    };
+    const deletePot = async (potId) => {
+
+        if (!confirm('Are you sure you want to delete this pot?')) {
+            return;
+        }
+        await potsStore.deletePot(potId);
+    };
+    const addFunds = async () => {
+        const amount = parseFloat(document.getElementById('addAmount').value);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount to add.');
+            return;
+        }
+        await potsStore.addMoneyToPot(formAddFunds.value.id, { amount });
+        closeModal();
+    };
+
+    const withdrawFunds = async () => {
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount to withdraw.');
+            return;
+        }
+        await potsStore.withdrawMoneyFromPot(formWithdrawFunds.value.id, { amount });
+        closeModal();
     };
 
 
@@ -74,27 +143,52 @@
         class="btn-add"
         @click="openAddPotModal"
         >Add New Pot</Button>
-        <section v-if="showModal" ref="formPot">
+        <form @submit.prevent="submitForm" v-if="showModal" ref="formPotRef">
+           
             <!-- Modal content for adding/editing pot would go here -->
-            <form @submit.prevent="submitForm">
+           
+             <span class="close" @click="closeModal">&times;</span>
+             <h2>{{ editMode ? 'Edit Pot' : 'Add Pot' }}</h2>
                 <label for="pot">Pot Name:</label>
                 <input v-model="formPot.pot" id="pot" required />
 
                 <label for="goal">Goal Amount:</label>
                 <input v-model.number="formPot.goal" id="goal" type="number" required />
 
-                <button type="submit">Add Pot</button>
-
-            </form>
+                <Button variant="primary" type="submit">{{ editMode ? 'Update Pot' : 'Add Pot' }}</Button>
 
                 
-        </section>
+
+            </form>
+             <form @submit.prevent="addFunds" v-if="showAddFundsModal">
+                <!-- Modal content for adding funds would go here -->
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>Add Funds to {{ formPot.pot }}</h2>
+                <label  for="addAmount">Amount to Add:</label>
+                <input v-model="formPot" id="addAmount" type="number" required />
+                <Button variant="primary" type="submit">Add Funds</Button>
+            </form>
+
+            <form @submit.prevent="withdrawFunds" v-if="showWithdrawFundsModal">
+                <!-- Modal content for withdrawing funds would go here -->
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>Withdraw Funds from {{ formPot.pot }}</h2>
+                <label for="withdrawAmount">Amount to Withdraw:</label>
+                <input v-model="formPot" id="withdrawAmount" type="number" required />
+                <Button variant="primary" type="submit">Withdraw Funds</Button>
+            </form>
+        
         <section class="container">
             <div class="grid">
                 <div v-for="item in potsData" :key="item.id" class="pot-card">
                     <h3>{{ item.pot }}</h3>
                     <p>${{ item.saved }} / ${{ item.goal }}</p>
-                    <button class="transparant" @click="openEditModal(item)">✏️</button>
+                    <div class="buttons">
+                        <button class="transparant" @click="openEditModal(item)">✏️</button>
+                        <button class="transparant" @click="deletePot(item.id)">🗑️</button>
+                        <button class="transparant" @click="openAddFundsModal(item)">➕</button>
+                        <button class="transparant" @click="openWithdrawFundsModal(item)">➖</button>
+                    </div>
                     <HorizontalBar
                         :key="item.id"
                         :value="item.saved"
@@ -144,6 +238,13 @@
     cursor: pointer;
     
    
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 </style>
