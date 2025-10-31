@@ -64,6 +64,8 @@ import { add } from 'date-fns';
     const closeModal = () => {
         showModal.value = false;
         showEditModal.value = false;
+        showAddFundsModal.value = false;
+        showWithdrawFundsModal.value = false;
     };
 
     const openAddFundsModal = (pot) => {
@@ -110,6 +112,8 @@ import { add } from 'date-fns';
         }
         await potsStore.addMoneyToPot(formAddFunds.value.id, { amount });
         closeModal();
+    
+
     };
 
     const withdrawFunds = async () => {

@@ -10,8 +10,8 @@
     import { Doughnut } from 'vue-chartjs';
     import { icon } from '@fortawesome/fontawesome-svg-core';
     import { useTransactionStore } from '../store/transactionsStore';
-    import { ref, onMounted, computed } from 'vue';
-
+    import { ref, onMounted, computed,  } from 'vue';
+    import  { useRouter } from "vue-router";
     const authStore = useAuthStore();
     const budgetStore = useBudgetStore();
     const transactionStore = useTransactionStore();
@@ -20,6 +20,7 @@
     const totalExpenseAmount = ref(0);
     const budget = ref(0);
     const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
+    const router = useRouter();
 
     onMounted(async() => {
       if (!authStore.isAuthenticated) {
@@ -128,6 +129,10 @@
         return authStore.user.email ;
     });
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+
+    const goToAllTransactions = () => {
+        router.push('/transactions');
+    };
 </script>
 
 <template>
@@ -173,7 +178,10 @@
 
            </section>
            <section class="transactions">
-            <h2>Last Transactions</h2>
+            <div class="mode-view">
+                <h2>Last Transactions</h2>
+                <h2 @click="goToAllTransactions" class="see-all">See All</h2>
+            </div>
               <tbody>
                    <tr v-for="transaction in lastThreeTransactions" :key="transaction.id">
                    <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
@@ -328,6 +336,19 @@
     font-weight: bold;
     font-size: 1.1rem;
     
+}
+.mode-view {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.see-all {
+    color: #007bff;
+    cursor: pointer;
+}
+.see-all:hover {
+    text-decoration: underline;
 }
 </style>
 
