@@ -29,9 +29,10 @@
         }
       await authStore.fetchCurrentUser()
         await transactionStore.fetchTransactions();
-        console.log(totalIncomingThisMonth.value, totalOutgoingThisMonth.value);
+        await budgetStore.fetchBudgets();
 
     });
+    
 
     
     const incomingTransactions = computed(() => {
@@ -79,12 +80,20 @@
     const totalBudgets = computed(() => {
         return budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
     });
+    const spentFromBudgets = computed(() => {
+        return transactionStore.transactions
+            .filter(t => t.type === 'expense' && budgetStore.budgets.some(b => b.category_name === t.category_name))
+            .reduce((sum, t) => sum + Number(t.amount), 0);
+    });
+    const remainingBudget = computed(() => {
+        return totalBudgets.value - spentFromBudgets.value;
+    });
 
   const chartData = computed(() => ({
     labels: ['Spent', 'Remaining Budget'],
     datasets: [
       {
-        data: [totalExpense.value, totalBudgets.value - totalExpense.value],
+        data: [spentFromBudgets.value, remainingBudget.value],
         backgroundColor: ['#46a9ff', '#27ae60'],
         hoverBackgroundColor: ['#36a2eb', '#27ae60'],
       },
