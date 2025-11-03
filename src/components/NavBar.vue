@@ -70,6 +70,17 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+@media (max-width: 768px) {
+    .sidebar {
+        flex-direction: column;
+        align-items: center;
+    }
+    .menu {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+}
 .sidebar {
    display: flex;
     flex-direction: row;
