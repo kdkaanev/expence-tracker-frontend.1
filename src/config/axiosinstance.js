@@ -1,8 +1,9 @@
 import axios from "axios"
 
 const axiosET = axios.create({
-    baseURL: "https://expencetracker-aqhzd2fvfnhaaydd.northeurope-01.azurewebsites.net",
-    //baseURL:  "http://127.0.0.1:8000/",
+    //baseURL: import.meta.env.VITE_API_URL,
+    baseURL: 'https://expencetracker-aqhzd2fvfnhaaydd.northeurope-01.azurewebsites.net',
+
 
   headers: { "Content-Type": "application/json" },
 })
