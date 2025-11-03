@@ -204,6 +204,12 @@
 </template>
 
 <style scoped>
+@media (max-width: 600px) {
+    .info {
+        grid-template-columns: 1fr !important;
+    }
+    
+}
 .dashboard {
     padding: 2rem;
 }
