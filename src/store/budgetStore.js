@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import axiosET from "../config/axiosinstance";
 import budgetService from "../services/budgetService";
 
 export const useBudgetStore = defineStore("budget", {

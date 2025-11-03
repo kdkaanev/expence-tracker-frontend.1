@@ -3,9 +3,9 @@ import {loginUser, registerUser, currentUser, updateProfile} from "../services/a
 import { jwtDecode}  from "jwt-decode";
 import {useRouter} from "vue-router";
 import axiosЕТ from "../config/axiosinstance.js"
-import { ro } from "date-fns/locale";
 
-const router = useRouter();
+
+
 
 let refreshInterval = null;
 
@@ -83,7 +83,7 @@ export const useAuthStore = defineStore("auth", {
         this.accessToken = res.data.access
         localStorage.setItem('access', this.accessToken)
       } catch (err) {
-        // ако не става refresh -> logout
+        
         this.logout()
       }
     },
@@ -103,7 +103,7 @@ export const useAuthStore = defineStore("auth", {
 
 
 
-    // Инициализация при startup
+    // initialize auth from localStorage
 
     async initAuth() {
       const access = localStorage.getItem("access")
@@ -122,7 +122,7 @@ export const useAuthStore = defineStore("auth", {
 
 
 
-      // Извикваме /users/me/ само веднъж при startup
+      
 
       }
     },

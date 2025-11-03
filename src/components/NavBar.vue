@@ -59,7 +59,7 @@ onBeforeUnmount(() => {
                     <router-link to="/transactions" class="link">Transactions</router-link>
                     <router-link to="/budget" class="link">Budget</router-link>
                     <router-link to="/pots" class="link">Pots</router-link>
-                    <router-link to="/recuring" class="link">Recuring</router-link>
+              
 
                    
                 

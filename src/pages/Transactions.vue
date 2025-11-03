@@ -7,8 +7,8 @@
     import Button from "../components/ui/Button.vue";
     import { categoryIcons } from "../services/categoryIcons.js";
     import { format } from "date-fns";
-    import { is } from "date-fns/locale";
     import TransactionFilter from "../components/TransactionFilter.vue";
+    
 
 
 
@@ -26,10 +26,10 @@
     const selectedCategory = ref("");
     const newCategoryName = ref("");
     const addFormRef = ref(null);
-  
+    const categoryModalRef = ref(null);
 
-const transactions =computed(() => transactionStore.transactions);
-const categories = computed(() => {
+    const transactions =computed(() => transactionStore.transactions);
+    const categories = computed(() => {
     const unique = new Map();
     transactions.value.forEach(t => {
         if (!unique.has(t.category)) {
@@ -136,27 +136,10 @@ const filteredTransactions = computed(() => {
            await transactionStore.deleteTransaction(id);
         }
     };
-    // const positiveTransactions = computed(() => {
-    //     return transactionStore.transactions.filter(t => t.type === 'income');
-    // });
-    // const negativeTransactions = computed(() => {
-    //     return transactionStore.transactions.filter(t => t.type === 'expense');
-    // });
+   
     const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
 
-    const getCategotyName = (categoryId) => {
-        const category = categoryStore.categories.find(cat => cat.id === categoryId);
-        return category ? category.name : "Unknown";
-    };
-
-    const openCategoryModal = () => {
-        showCategoryModal.value = true;
-        formDataCategory.value = {
-            id: null,
-            name: ""
-        };
-
-    };
+    
 
     
     const addCategory = async () => {
@@ -179,9 +162,7 @@ const filteredTransactions = computed(() => {
             isSubmitting.value = false;
         }
         
-        //await categoryStore.createCategory({ name: newCategoryName.value });
-        //newCategoryName.value = "";
-        //showCategoryModal.value = false;
+       
     };
     function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
@@ -294,7 +275,7 @@ const filteredTransactions = computed(() => {
                           >+ Add New Category
                           </option>
                      </select>
-                  <category-modal v-if="showCategoryModal" @close="showCategoryModal = false" @category-added="fetchCategories" />
+                 
                      <div class="btn">
                         <Button variant="primary" @click="saveTransaction">Save</Button>
                         <Button variant="secondary" @click="closeModal">Cancel</Button>

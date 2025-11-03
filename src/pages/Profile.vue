@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthStore } from "../store/authStore";
-import Button from "../components/ui/Button.vue";
+
 import  { useRouter } from "vue-router";
 import {onMounted} from "vue";
 

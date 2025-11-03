@@ -3,38 +3,25 @@
     import { storeToRefs } from 'pinia'
     import { useBudgetStore } from '../store/budgetStore.js';
 
-    import NavBar from '../components/NavBar.vue';
     import { categoryIcons } from "../services/categoryIcons.js";
     import DonuutChart from '../components/charts/DonuutChart.vue';
-    import LineChart from '../components/charts/LineChart.vue';
-    import { Doughnut } from 'vue-chartjs';
-    import { icon } from '@fortawesome/fontawesome-svg-core';
     import { useTransactionStore } from '../store/transactionsStore';
-    import { ref, onMounted, computed,  } from 'vue';
+    import {computed } from 'vue';
     import  { useRouter } from "vue-router";
+   
+
+
     const authStore = useAuthStore();
     const budgetStore = useBudgetStore();
     const transactionStore = useTransactionStore();
-    const transactions = ref([]);
-    const totalIncomeAmount = ref(0);
-    const totalExpenseAmount = ref(0);
-    const budget = ref(0);
+   
+    const { budgets } = storeToRefs(budgetStore);
     const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
     const router = useRouter();
 
-    onMounted(async() => {
-      if (!authStore.isAuthenticated) {
-            window.location.href = '/auth/login';
-            return;
-        }
-      await authStore.fetchCurrentUser()
-        await transactionStore.fetchTransactions();
-        await budgetStore.fetchBudgets();
 
-    });
-    
 
-    
+
     const incomingTransactions = computed(() => {
         return transactionStore.transactions.filter(t => t.type === 'income');
         
@@ -78,8 +65,10 @@
     });
 
     const totalBudgets = computed(() => {
-        return budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
+        return budgets.value.reduce((sum, b) => sum + Number(b.amount), 0);
+
     });
+  
     const spentFromBudgets = computed(() => {
         return transactionStore.transactions
             .filter(t => t.type === 'expense' && budgetStore.budgets.some(b => b.category_name === t.category_name))
@@ -100,31 +89,11 @@
     ]
   }));
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '80%',
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          color: '#333',
-          font: { size: 14 },
-
-      },
-    },
-    centerText: {
-        text: `${totalBudgets.value ? `$${totalBudgets.value.toFixed(2)}` : '$0.00'}`,
-        color: '#333',
-        font: { size: '20' },
-      },
-    },
-  };
 
   
 
      function getIcon(categoryName) {
-      return categoryIcons[categoryName] || "tag"; // по подразбиране tag
+      return categoryIcons[categoryName] || "tag"; // default to "tag"
 };
      const lastThreeTransactions = computed(() => {
         return transactionStore.transactions
@@ -141,6 +110,9 @@
 
     const goToAllTransactions = () => {
         router.push('/transactions');
+    };
+    const goToBudgets = () => {
+        router.push('/budget');
     };
 </script>
 
@@ -169,15 +141,27 @@
             </section>
             <section class="card odd">
                 <h2>Saving</h2>
-                <p>${{ balance }}</p>
+                <p>${{ balanceThisMonth }}</p>
             </section>
            
            </div>
            <section class="charts">
+            
+            <div class="mode-view budget">
+                <h2>Budget Overview {{ totalBudgets }}</h2>
+                <h2 @click="goToBudgets" class="see-all">See Budgets</h2>
+            </div>
+                
             <div  >
                   <DonuutChart
                     :chart-data="chartData"
-                    :chart-options="chartOptions"
+                    :center-text="{
+                      lines: [
+                        { text: `$${totalBudgets}`, fontSize: 20, color: '#333' },
+                        { text: `Remaining: $${remainingBudget}`, fontSize: 14, color: remainingBudget < 0 ? 'red' : '#666' },
+                      ],
+                      
+                    }"
                 />
               </div>
              
@@ -268,6 +252,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-direction: column;
 }
 .last {
     margin-top: 2rem;
@@ -358,6 +343,9 @@
 }
 .see-all:hover {
     text-decoration: underline;
+}
+.budget {
+    gap: 4rem;
 }
 </style>
 

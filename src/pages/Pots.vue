@@ -4,7 +4,7 @@
     import { usePotsStore } from '../store/potsStore';
     import Button from '../components/ui/Button.vue';
     import { computed } from 'vue';
-import { add } from 'date-fns';
+
 
     const potsStore = usePotsStore();
     const potsData = computed(() => potsStore.pots);
@@ -18,7 +18,7 @@ import { add } from 'date-fns';
 
     onMounted(async () => {
         await potsStore.fetchPots();
-        console.log('Pots data:', potsData.value);
+       
     });
 
 
@@ -195,8 +195,8 @@ import { add } from 'date-fns';
                     </div>
                     <HorizontalBar
                         :key="item.id"
-                        :value="item.saved"
-                        :total="item.goal"
+                        :value="Number(item.saved)"
+                        :total="Number(item.goal)"
                         mode="pot"
                     />
                     <p>{{ potStatus(item.pot).remaining }} remaining</p>

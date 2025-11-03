@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import {Chart as Cartjs,Title,Tooltip,Legend,LineElement,CategoryScale,LinearScale,PointElement, Filler, plugins} from 'chart.js';
 import { Line } from 'vue-chartjs';
 
@@ -80,4 +80,4 @@ const chartOptions = {
     background-color: #fff;
    
 }
-</style>
+</style> -->

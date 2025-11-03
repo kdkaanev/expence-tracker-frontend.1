@@ -17,7 +17,7 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
 });
 
-// Класове за варианти
+// Класове за варианти  
 const variantClass = computed(() => {
   switch (props.variant) {
     case "secondary":

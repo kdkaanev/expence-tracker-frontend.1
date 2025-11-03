@@ -6,11 +6,11 @@
 
 
   const props = defineProps({
-    chartBarData: {
+    barData: {
       type: Object,
       required: true,
     },
-    chartOptions: {
+    barOptions: {
       type: Object,
       required: true,
     },
@@ -21,7 +21,8 @@
 
 <template>
   <div class="bar">
-    <Bar :data="chartBarData" :options="chartOptions" />
+    <Bar :data="barData" :options="barOptions" />
+    
 
   </div>
 </template>

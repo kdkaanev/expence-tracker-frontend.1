@@ -1,6 +1,5 @@
 <script setup>
-import { startOfDay } from 'date-fns';
-import { ar } from 'date-fns/locale';
+
 import { ref, watch } from 'vue';
 
 const props = defineProps({

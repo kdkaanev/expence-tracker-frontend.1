@@ -1,11 +1,20 @@
 <script setup>
 import NavBar from "../components/NavBar.vue";
-import { useAuthStore } from "../store/authStore";
-import DashBoard from "../pages/DashBoard.vue";
+import { onMounted } from "vue"
+import { useAuthStore } from "../store/authStore.js"
 
-
+import { useBudgetStore } from "../store/budgetStore.js"
+import { useTransactionStore } from "../store/transactionsStore.js"
 const authStore = useAuthStore();
+const budgetStore = useBudgetStore();
+const transactionStore = useTransactionStore();
 
+
+onMounted(async () => {
+   authStore.fetchCurrentUser()
+   budgetStore.fetchBudgets()
+    transactionStore.fetchTransactions()
+});
 </script>
 
 

@@ -1,7 +1,7 @@
 <script setup>
 import { categoryIcons } from '../services/categoryIcons';
 import DonuutChart from '../components/charts/DonuutChart.vue';
-import LineChart from '../components/charts/LineChart.vue';
+
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
@@ -12,6 +12,7 @@ import { useTransactionStore } from '../store/transactionsStore';
 import { useCategoryStore } from '../store/categoryStore';
 import {generateColorShades} from '../utiles/generateColor.js';
 import { storeToRefs } from 'pinia';
+import { babelParse } from 'vue/compiler-sfc';
 const budgetStore = useBudgetStore();
 const transactionStore = useTransactionStore();
 const categoryStore = useCategoryStore();
@@ -22,17 +23,8 @@ const { daysOfMonth, dailyExpenses } = storeToRefs(transactionStore);
 
 const showModal = ref(false);
 
-const transactions =computed(() => transactionStore.transactions);
-// const categories = computed(() => {
-//     const unique = new Map();
-//     transactions.value.forEach(t => {
-//         if (!unique.has(t.category)) {
-//             unique.set(t.category, { id: t.category, name: t.category_name });
-//         }
-//     });
-    
-//     return Array.from(unique.values());
-// });
+
+
 const formBudget = ref({
     category: '',
     amount: 0,
@@ -98,24 +90,8 @@ const chartData = computed(() => ({
 }));
 
 
-const chartOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'right',
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const label = context.label || '';
-                        const value = context.parsed || 0;
-                        return `${label}: $${value}`;
-                    },
-                },
-            },
-        },
-    };
-    const chartBarData = computed(() => ({
+
+    const barData = computed(() => ({
         labels: daysOfMonth.value.map(day => day.split('-')[2]),
         datasets: [
             {
@@ -128,7 +104,7 @@ const chartOptions = {
     }));
 
 
-    const chartOptionsBar = {
+    const barOptions = {
         responsive: true,
         plugins: {
             legend: {
@@ -174,7 +150,9 @@ const chartOptions = {
                 <section class="card">
                     <DonuutChart class="donut" 
                     :chart-data="chartData" 
-                    :chart-options="chartOptions" />
+                    
+                    
+                    />
                     <div class="summary">
                         <p>Total Budget</p>
                         <h3>{{ totalBudget }}</h3>
@@ -208,8 +186,8 @@ const chartOptions = {
             </div>
             <div class="rightside">
                 <BarChart 
-                :chart-bar-data="chartBarData" 
-                :chart-options-bar="chartOptionsBar"
+                :bar-data="barData" 
+                :bar-options="barOptions"
                    
                 />
                 <Button 

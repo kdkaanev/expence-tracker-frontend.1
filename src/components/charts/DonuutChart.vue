@@ -1,42 +1,42 @@
 <script setup>
   import { Chart as ChartJS, ArcElement, Tooltip, Legend, } from 'chart.js';
+  import { computed } from 'vue';
   import { Doughnut} from 'vue-chartjs';
+  import { centerTextPlugin } from '../../utiles/chartCenterText.js';
 
 
  
 
- const centerTextPlugin = {
-  id: 'centerText',
-  afterDraw(chart) {
-    const { ctx, chartArea: { width, height } } = chart
-    ctx.save()
 
-    const fontSize = (height / 100).toFixed(2)
-    ctx.font = `${fontSize}em sans-serif`
-    ctx.textBaseline = 'middle'
-    ctx.fillStyle = '#333'
-    ctx.textAlign = 'center'
 
-    // Текстът, който ще се показва (взимаме го от chart.config.options.plugins.centerText)
-    const text = chart.config.options.plugins.centerText?.text || ''
-    const textX = width / 2 + chart.chartArea.left
-    const textY = height / 2 + chart.chartArea.top
 
-    ctx.fillText(text, textX, textY)
-    ctx.restore()
-  }
-}
 ChartJS.register(ArcElement, Tooltip, Legend, centerTextPlugin);
-defineProps({
-  chartData: {
+const props = defineProps({
+  chartData: Object,
+  centerText: {
     type: Object,
-    required: true,
-  },
-  chartOptions: {
-    type: Object,
-    required: true,
-  },
+    required: false,
+    default: null,
+  }
+ 
   });
+
+const chartOptions = computed(() => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    ...(props.centerText && {
+      centerText: {
+        lines: props.centerText.lines,
+        lineHeight: props.centerText.lineHeight || 22,
+      },
+    }),
+    
+    cutout: '70%',
+
+  },
+}));
 
 
 </script>

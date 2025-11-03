@@ -27,7 +27,7 @@ const props = defineProps({
   placeholder: String,
   type: { type: String, default: "text" },
   error: String,
-  icon: String, // напр. "fas fa-envelope"
+  icon: String, //  "fas fa-envelope"
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -75,7 +75,7 @@ const model = computed({
 }
 
 .input-field.with-icon {
-  padding-left: 2.5rem; /* повече място за иконата */
+  padding-left: 2.5rem; /* more space for the icon */
 }
 
 .input-field:focus {

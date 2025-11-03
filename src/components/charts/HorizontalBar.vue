@@ -1,8 +1,8 @@
 <script setup>
     import { Chart as ChartJS,Title,Tooltip,Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { ca } from 'date-fns/locale';
-import { computed } from 'vue';
-    import { Bar } from 'vue-chartjs';
+
+    import { computed } from 'vue';
+   
 
      ChartJS.register(Title,Tooltip,Legend, BarElement, CategoryScale, LinearScale);
 
@@ -11,7 +11,7 @@ import { computed } from 'vue';
        
       category: {
         type: Number,
-        required: true
+        required: false
       },
       value: {
         type: Number,
@@ -23,7 +23,7 @@ import { computed } from 'vue';
       },
       statusFn: {
         type: Function,
-        required: true
+        required: false
       },
       mode : {
         type: String,

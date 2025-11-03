@@ -9,7 +9,7 @@ import MainLayout from "../layouts/MainLayout.vue";
 import DashBoard from "../pages/DashBoard.vue";
 import Budget from "../pages/Budget.vue";
 import Pots from "../pages/Pots.vue";
-import Recuring from "../pages/Recuring.vue";
+
 import Profile from "../pages/Profile.vue";
 import EditProfile from "../components/EditProfile.vue";
 
@@ -35,7 +35,6 @@ const routes = [
       {path: "transactions", name:'transactions', component: Transactions},
       {path: "budget", name:'budget', component: Budget},
       { path: "pots", name:'pots', component: Pots},
-      { path: "recuring", name:'recuring', component: Recuring},
       { path: "profile", name:'profile', component: Profile},
       { path: "edit-profile", name:'editprofile', component: EditProfile},
     ]
