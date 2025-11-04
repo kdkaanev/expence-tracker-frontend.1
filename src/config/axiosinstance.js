@@ -1,9 +1,10 @@
 import axios from "axios"
 
+const baseURL = "/api";
 const axiosET = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    
     //baseURL: 'https://expencetracker-aqhzd2fvfnhaaydd.northeurope-01.azurewebsites.net',
-
+    baseURL: baseURL,
 
   headers: { "Content-Type": "application/json" },
 })
