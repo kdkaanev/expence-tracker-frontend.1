@@ -7,11 +7,11 @@
     {
       "route": "/api/*",
       "allowedRoles": ["anonymous"],
-      "rewrite": "https://expencetracker-aqhzd2fvfnhaaydd.northeurope-01.azurewebsites.net/api/"
+      "serve": "/api"
     }
   ],
   "navigattionFallback": {
-    "rewrite": "/index.html",
-    "exclude": ["/api/*"]
+    "rewrite": "/index.html"
+    
   }
 }
