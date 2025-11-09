@@ -3,6 +3,8 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import Profile from "../pages/Profile.vue";
 import  { useRouter } from "vue-router";
 import { useAuthStore } from "../store/authStore";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faGrip, faList, faWallet, faPiggyBank } from '@fortawesome/free-solid-svg-icons';
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -53,34 +55,35 @@ onBeforeUnmount(() => {
             >
             <Profile />     
         </div>
+        <div class="a">Hay</div>
+        
             <nav class="menu">
                 
-                    <router-link to="/" class="link">Dashboard</router-link>
-                    <router-link to="/transactions" class="link">Transactions</router-link>
-                    <router-link to="/budget" class="link">Budget</router-link>
-                    <router-link to="/pots" class="link">Pots</router-link>
-              
+                    <router-link to="/" class="link"><span class="icon"><FontAwesomeIcon :icon="faGrip" /></span>Dashboard</router-link>
+                    <router-link to="/transactions" class="link"><span class="icon"><FontAwesomeIcon :icon="faList" /></span>Transactions</router-link>
+                    <router-link to="/budget" class="link"><span class="icon"><FontAwesomeIcon :icon="faWallet" /></span>Budget</router-link>
+                    <router-link to="/pots" class="link"><span class="icon"><FontAwesomeIcon :icon="faPiggyBank" /></span>Pots</router-link>
 
-                   
-                
 
             </nav>
+
+            
+                <nav class="responsive" >
+                <router-link to="/" class="link"><span class="icon"><FontAwesomeIcon :icon="faGrip" /></span></router-link>
+                <router-link to="/transactions" class="link"><span class="icon"><FontAwesomeIcon :icon="faList" /></span></router-link>
+                <router-link to="/budget" class="link"><span class="icon"><FontAwesomeIcon :icon="faWallet" /></span></router-link>
+                <router-link to="/pots" class="link"><span class="icon"><FontAwesomeIcon :icon="faPiggyBank" /></span></router-link>
+            </nav>
+           
+
             
         </aside>
 </template>
 
-<style scoped>
-@media (max-width: 768px) {
-    .sidebar {
-        flex-direction: column;
-        align-items: center;
-    }
-    .menu {
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-}
+<style>
+  
+
+
 .sidebar {
    display: flex;
     flex-direction: row;
@@ -88,11 +91,14 @@ onBeforeUnmount(() => {
     padding: 2rem;
 }
 .menu {
-    display: flex;
+       display: flex;
     flex-direction: row;
     gap: 1.5rem;
     margin-top: 1rem;
     text-decoration: none;
+}
+.responsive {
+    display: none;
 }
 a {
     cursor: pointer;
@@ -116,5 +122,31 @@ a {
 .primary:hover {
     background-color: #219150;
 }
+.icon {
+    margin-right: 8px;
+}
+.lether {
+    font-size: 1.2rem;
+}
+  @media (max-width: 768px) {
+        .a{ display: none; }
+        .sidebar {
+            flex-direction: column;
+            align-items: center;
+        }
+    .menu {
+        display: none;
+    }
+    .responsive {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+        margin-top: 1rem;
+        text-decoration: none;
+    }   
+  
+
+    
+} 
 
 </style>

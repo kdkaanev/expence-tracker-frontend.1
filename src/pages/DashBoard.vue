@@ -2,12 +2,14 @@
     import { useAuthStore } from '../store/authStore';
     import { storeToRefs } from 'pinia'
     import { useBudgetStore } from '../store/budgetStore.js';
-
+    import BarChart from '../components/charts/BarChart.vue';
     import { categoryIcons } from "../services/categoryIcons.js";
     import DonuutChart from '../components/charts/DonuutChart.vue';
     import { useTransactionStore } from '../store/transactionsStore';
     import {computed } from 'vue';
     import  { useRouter } from "vue-router";
+
+   
    
 
 
@@ -17,6 +19,7 @@
    
     const { budgets } = storeToRefs(budgetStore);
     const { positiveTransactions, negativeTransactions } = storeToRefs(transactionStore);
+     const { daysOfMonth, dailyExpenses } = storeToRefs(transactionStore);
     const router = useRouter();
 
 
@@ -89,6 +92,37 @@
     ]
   }));
 
+   const barData = computed(() => ({
+        labels: daysOfMonth.value.map(day => day.split('-')[2]),
+        datasets: [
+            {
+                label: Date().toLocaleString('default', { month: 'long' }),
+                backgroundColor: '#22c55e',
+                data: dailyExpenses.value,
+                borderRadius: 8,
+            },
+        ],
+    }));
+
+
+    const barOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Daily Expenses',
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
+
 
   
 
@@ -146,13 +180,22 @@
            
            </div>
            <section class="charts">
+                <div class="bar-chart">
+                <BarChart 
+                :bar-data="barData" 
+                :bar-options="barOptions"
+                   
+                />
+            </div>
             
             <div class="mode-view budget">
                 <h2>Budget Overview {{ totalBudgets }}</h2>
                 <h2 @click="goToBudgets" class="see-all">See Budgets</h2>
             </div>
+
+        
                 
-            <div  >
+            <div  class="donut">
                   <DonuutChart
                     :chart-data="chartData"
                     :center-text="{
@@ -352,6 +395,19 @@
 }
 .budget {
     gap: 4rem;
+}
+
+.bar-chart {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    
+}
+.donut {
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    margin: 0 auto;
 }
 </style>
 

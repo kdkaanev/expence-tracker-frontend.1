@@ -15,6 +15,12 @@ export const categoryIcons = {
     personal: 'user',
     others: 'question-circle',
 };
+export const navIcons = {
+    dashboard: 'grip',
+    transactions: 'list',
+    budget: 'wallet',
+    pots: 'piggy-bank',
+};
 // src/icons.js
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {

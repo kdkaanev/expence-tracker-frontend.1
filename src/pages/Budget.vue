@@ -183,13 +183,8 @@ const chartData = computed(() => ({
                         </div>
                     </div>
                 </section>
-            </div>
-            <div class="rightside">
-                <BarChart 
-                :bar-data="barData" 
-                :bar-options="barOptions"
-                   
-                />
+                <div class="rightside">
+              
                 <Button 
                 variant="primary"
                 @click="openModal"
@@ -216,14 +211,15 @@ const chartData = computed(() => ({
                     </section>
             </div>
 
+            </div>
+            
         </section>
     </article>
 </template>
 
 <style scoped>
     .container {
-    display: flex;
-    flex-direction: row;
+   
   background-color: white;
   padding: 20px;
   border-radius: 10px;
@@ -233,7 +229,7 @@ const chartData = computed(() => ({
         display: flex;
         flex-direction: column;
         gap: 20px;
-        width: 50%;
+        width: 100%;
         padding-top: 2rem;
     }
     .rightside {
