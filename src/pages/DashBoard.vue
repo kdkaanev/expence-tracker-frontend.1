@@ -247,12 +247,7 @@
 </template>
 
 <style scoped>
-@media (max-width: 600px) {
-    .info {
-        grid-template-columns: 1fr !important;
-    }
-    
-}
+
 .dashboard {
     padding: 2rem;
 }
@@ -408,6 +403,32 @@
     max-width: 400px;
     height: 400px;
     margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .info {
+        grid-template-columns: 1fr !important;
+    }
+    tbody tr {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        border: 1px solid #ddd;
+        padding: 0.5rem;
+        margin-bottom: 1rem;    
+    
+}
+.transactions {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+tr td {
+    width: 100%;
+    text-align: center;
+}
 }
 </style>
 

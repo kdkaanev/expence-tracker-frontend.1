@@ -35,13 +35,14 @@ watch([localCategory, localStartOfDay, localEndOfDay], () => {
             {{ category.name}}
             </option>
         </select>
-    
+        <label for="">from day</label>
         <input
+      
             type="date"
             v-model="localStartOfDay"
             :placeholder="new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: '2-digit', day: '2-digit' })"
         />
-    
+        <label for="">to day</label>
         <input
             type="date"
             v-model="localEndOfDay"

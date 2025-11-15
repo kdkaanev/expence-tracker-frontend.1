@@ -218,7 +218,7 @@ const filteredTransactions = computed(() => {
                     </tr>
                 </thead>
                 <tbody>
-                   <tr v-for="transaction in filteredTransactions" :key="transaction.id">
+                   <tr v-for="transaction in filteredTransactions" :key="transaction.id" class="info">
                    <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
                         <td><div class="cat-name">
                           <font-awesome-icon
@@ -360,4 +360,32 @@ const filteredTransactions = computed(() => {
     font-size: 1.1rem;
     
 }
+
+@media (max-width: 760px) {
+    .info{
+       display:flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        border: 1px solid #ddd;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        justify-content: space-between;
+    }
+    td {
+        text-align: center;
+    }
+    
+    .filter{
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .th-text{
+        display: none;
+    }
+    .thead{
+        display: none;  
+    
+    }
+}
+
 </style>

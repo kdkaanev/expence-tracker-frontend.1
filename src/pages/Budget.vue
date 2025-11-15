@@ -183,7 +183,7 @@ const chartData = computed(() => ({
                         </div>
                     </div>
                 </section>
-                <div class="rightside">
+               
               
                 <Button 
                 variant="primary"
@@ -205,11 +205,11 @@ const chartData = computed(() => ({
                                 <label for="amount">Enter Budget</label> 
                                 <input type="number" v-model.number="formBudget.amount" id="amount" min="1" required />
                         </div>
-                            <Button type="submit" variant="success">Add Budget</Button>
+                            <Button class="btn" type="submit" variant="success">Add Budget</Button>
                         </form>
                     </div>  
                     </section>
-            </div>
+            
 
             </div>
             
@@ -302,6 +302,10 @@ const chartData = computed(() => ({
     }
     .capitalize{
     text-transform: capitalize;
+}
+.btn{
+    margin-top: 1rem;
+    width: 100%;
 }
 
 </style>
