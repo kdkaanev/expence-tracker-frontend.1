@@ -38,13 +38,24 @@
     });
     return Array.from(unique.values());
 });
+    const casualCategories = [
+        'Food',
+        'Entertainment',
+        'Shopping',
+        'Travel',
+        'Health',
+        'Salary',
+        'Gifts & Donations',
+        'Education',
+        'Transport'
+    ]
 
     const formData = ref({
         id: null,
         description: "",
         transaction_date: "2025-09-18T12:34:56.789Z",
         amount: 0,
-        category: "",
+        category: casualCategories,
         type: ""
     });
     const formDataCategory = ref({
@@ -99,10 +110,14 @@ const filteredTransactions = computed(() => {
         }
     };
 
-    const openEditModal = (transaction) => {
+    const openEditModal = async(transaction) => {
         editMode.value = true;
         formData.value = { ...transaction };
         showModal.value = true;
+              await nextTick();
+        if (addFormRef.value) {
+            addFormRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     };
 
     const closeModal = () => {
@@ -121,7 +136,8 @@ const filteredTransactions = computed(() => {
        }
        formData.value.transaction_date = format(new Date(formData.value.transaction_date), "yyyy-MM-dd");
        if (editMode.value) {
-           await transactionStore.updateTransaction(formData.value);
+           await transactionStore.updateTransaction(formData.value.id, formData.value);
+           
        } else {
            await transactionStore.addTransaction(formData.value);
        }
@@ -267,6 +283,8 @@ const filteredTransactions = computed(() => {
                      <label>Category:</label>
                      <select v-model="formData.category">
                         <option disabled value="">Select Category</option>
+                        
+                       
                           <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
                             {{ category.name }}
                           </option>

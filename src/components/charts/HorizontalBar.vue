@@ -46,9 +46,11 @@
    
     
     const progressBackground = computed(() => {
-        if (statusUsed.value.used >= 90) {
+        let usedValue = Number(statusUsed.value);
+        if (usedValue >= 90) {
+           
             return 'linear-gradient(90deg, #e63946, #ff7b00)'; 
-        } else if (statusUsed.value.used >= 70) {
+        } else if (usedValue >= 70) {
             return '#ffb703'; // yellow
         } else {
             return '#26d926'; // Green

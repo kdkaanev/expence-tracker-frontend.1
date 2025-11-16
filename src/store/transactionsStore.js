@@ -60,7 +60,7 @@ export const useTransactionStore = defineStore("transaction", {
             this.transactions.push(response.data);
         },
         async updateTransaction(transactionId, updatedData) {
-            const response = await axiosET.put(`/transactions/${transactionId}`, updatedData);
+            const response = await axiosET.put(`api/transactions/${transactionId}/`, updatedData);
             const index = this.transactions.findIndex(tx => tx.id === transactionId);
             if (index !== -1) {
                 this.transactions[index] = response.data;
