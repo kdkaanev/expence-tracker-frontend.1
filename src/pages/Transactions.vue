@@ -23,15 +23,17 @@
     const showModal = ref(false);
     const editMode = ref(false);
     const showCategoryModal = ref(false);
+    const categoryToDelete = ref(null);
     const selectedCategory = ref("");
     const newCategoryName = ref("");
     const addFormRef = ref(null);
     const categoryModalRef = ref(null);
-
+    const openDeleteCategoryModal = ref(false);
     const transactions =computed(() => transactionStore.transactions);
+
     const categories = computed(() => {
-    const unique = new Map();
-    transactions.value.forEach(t => {
+        const unique = new Map();
+        transactions.value.forEach(t => {
         if (!unique.has(t.category)) {
             unique.set(t.category, { id: t.category, name: t.category_name });
         }
@@ -80,11 +82,12 @@ const filteredTransactions = computed(() => {
         const matchStart = !filters.value.startOfDay || transactionDate >= new Date(filters.value.startOfDay);
         const matchEnd = !filters.value.endOfDay || transactionDate <= new Date(filters.value.endOfDay);
 
-        return matchCategory && matchStart && matchEnd;
+        return matchCategory && matchStart && matchEnd
     });
 });
 
-    
+
+    const allTransactions = computed(() => filteredTransactions.value.sort((a, b) => new Date(b.transaction_date) - new Date(a.transaction_date)));
 
 
 
@@ -180,6 +183,13 @@ const filteredTransactions = computed(() => {
         
        
     };
+
+    function deleteCategory(id) {
+        categoryStore.deleteCategory(id);
+        openDeleteCategoryModal.value = false;
+    }
+
+   
     function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
 }
@@ -191,20 +201,30 @@ const filteredTransactions = computed(() => {
         if (newVal === "__add__") {
             showCategoryModal.value = true;
             selectedCategory.value = "";
+            openDeleteCategoryModal.value = false;
+            
         }
+        if (newVal === "__delete__") {
+            openDeleteCategoryModal.value = true;
+            selectedCategory.value = "";
+            showCategoryModal.value = false;
+           
+        }
+    });
         nextTick(() => {
             if (categoryModalRef.value) {
                 categoryModalRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
-    }); 
+    
 </script>
 
 <template>
     <article>
         <section class="container">
-            <h1 class="text">Transactions</h1>
+            
             <div>
+          
                 <TransactionFilter
                 :categories="categories"
                 :selectedCategory="filters.category"
@@ -216,10 +236,92 @@ const filteredTransactions = computed(() => {
             
             </div>
             
-          
+                  <Button class="btn-add"
+                variant="primary"
+                @click="openAddModal"
+            >Add Transaction
+        </Button>
+        <section v-if="showModal" class="modal" ref="addFormRef">
+                <div class="modal-content">
+                    <span class="close" @click="closeModal">&times;</span>
+                    <h2>{{ editMode ? 'Edit Transaction' : 'Add Transaction' }}</h2>
+                  <label>Description:</label>
+                    <input type="text" v-model="formData.description" placeholder="Description" />
+                    <label>Date:</label>
+                   <input type="date" v-model="formData.transaction_date" />
+                   <label>Amount:</label>
+                   <input type="number" v-model="formData.amount" placeholder="Amount" />
+                    <label >Transaction Type:</label>
+                   <select v-model="formData.type">
+                        <option disabled value="">Select </option>
+                       <option value="income">Income</option>
+                       <option value="expense">Expense</option>
+                   </select>
+                     <label>Category:</label>
+                     <select v-model="formData.category">
+                        <option disabled value="">Select Category</option>
+                        
+                       
+                          <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
+                            {{ category.name }} 
+                          </option>
+                          <option
+                              value="__add__"
+                          >+ Add New Category
+                          </option>
+                          <option value="__delete__">
+                                🗑️ Delete Category
+                          </option>
+                          
+                     </select>
+                 
+                     <div class="btn">
+                        <Button variant="primary" @click="saveTransaction">Save</Button>
+                        <Button variant="secondary" @click="closeModal">Cancel</Button>
+                     </div>
+                     <div v-if="showCategoryModal" class="modal-category" ref="categoryModalRef">
+                         
+                        <!-- Category Modal Content Here -->
+                         <div class="modal-content">
+                            <span class="close" @click="showCategoryModal=false">&times;</span>
+                            <h2>Add New Category</h2>
+                            <input type="text" v-model="newCategoryName" placeholder="Category Name" />
+                            
+                        
+                            <div class="btn">
+                                <Button variant="primary" @click="addCategory">Add Category</Button>
+                                <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
+                            </div>
+                         </div>
+                        
 
 
+                     </div>
+                      <div v-if="openDeleteCategoryModal" class="delete-category">
+                            <!-- Delete Category Modal Content Here -->
+                            <div class="modal-content">
+                                <span class="close" @click="openDeleteCategoryModal=false">&times;</span>
+                                <h2>Delete Category</h2>
+                                <p>Select a category to delete:</p>
+                                <select v-model="categoryToDelete">
+                                    <option disabled value="">Select Category</option>
+                                    <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
+                                        {{ category.name }}
+                                    </option>
+                                </select>
+                                <div class="btn">
+                                    <Button variant="primary" @click="deleteCategory(categoryToDelete)">Delete Category</Button>
+                                    <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
+                                </div>
+                            </div>
+                            
+                         </div>
+                </div>
+            </section>  
+
+<h1 class="text">Transactions</h1>
             <table class="table">
+                
                 <thead class="thead">
                     <tr>
                         
@@ -234,7 +336,7 @@ const filteredTransactions = computed(() => {
                     </tr>
                 </thead>
                 <tbody>
-                   <tr v-for="transaction in filteredTransactions" :key="transaction.id" class="info">
+                   <tr v-for="transaction in allTransactions" :key="transaction.id" class="info">
                    <!-- <tr v-for="transaction in transactions" :key="transaction.id"> -->
                         <td><div class="cat-name">
                           <font-awesome-icon
@@ -259,64 +361,8 @@ const filteredTransactions = computed(() => {
                     </tr>
                 </tbody>
             </table>
-              <Button class="btn-add"
-                variant="primary"
-                @click="openAddModal"
-            >Add Transaction
-        </Button>
-            <section v-if="showModal" class="modal" ref="addFormRef">
-                <div class="modal-content">
-                    <span class="close" @click="closeModal">&times;</span>
-                    <h2>{{ editMode ? 'Edit Transaction' : 'Add Transaction' }}</h2>
-                  <label>Description:</label>
-                    <input type="text" v-model="formData.description" placeholder="Description" />
-                    <label>Date:</label>
-                   <input type="date" v-model="formData.transaction_date" />
-                   <label>Amount:</label>
-                   <input type="number" v-model="formData.amount" placeholder="Amount" />
-                    <label >Transaction Type:</label>
-                   <select v-model="formData.type">
-                        <option disabled value="">Select </option>
-                       <option value="income">Income</option>
-                       <option value="expense">Expense</option>
-                   </select>
-                     <label>Category:</label>
-                     <select v-model="formData.category">
-                        <option disabled value="">Select Category</option>
-                        
-                       
-                          <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
-                            {{ category.name }}
-                          </option>
-                          <option
-                              value="__add__"
-                          >+ Add New Category
-                          </option>
-                     </select>
-                 
-                     <div class="btn">
-                        <Button variant="primary" @click="saveTransaction">Save</Button>
-                        <Button variant="secondary" @click="closeModal">Cancel</Button>
-                     </div>
-                     <div v-if="showCategoryModal" class="modal-category" ref="categoryModalRef">
-                         
-                        <!-- Category Modal Content Here -->
-                         <div class="modal-content">
-                            <span class="close" @click="showCategoryModal=false">&times;</span>
-                            <h2>Add New Category</h2>
-                            <input type="text" v-model="newCategoryName" placeholder="Category Name" />
-                            
-                        
-                            <div class="btn">
-                                <Button variant="primary" @click="addCategory">Add Category</Button>
-                                <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
-                            </div>
-                         </div>
-
-
-                     </div>
-                </div>
-            </section>  
+      
+            
                
 
         </section>
@@ -359,6 +405,7 @@ const filteredTransactions = computed(() => {
 .btn-add{
     width: 100%;
   margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 .close {
     color: #aaa;

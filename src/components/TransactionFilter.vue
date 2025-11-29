@@ -29,6 +29,7 @@ watch([localCategory, localStartOfDay, localEndOfDay], () => {
 
 <template>
     <div class="filter">
+      <h3>Filter Transactions</h3>
         <select v-model="localCategory">
             <option value="">All Categories</option>
             <option v-for="category in categories" :key="category.id" :value="category.id" class="capitalize">
@@ -57,7 +58,8 @@ watch([localCategory, localStartOfDay, localEndOfDay], () => {
 .filter {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 select, input[type="date"] {
   padding: 5px;
@@ -72,6 +74,7 @@ input[type="date"] {
 .capitalize {
   text-transform: capitalize;
 }
+
 
 
 </style>

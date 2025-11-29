@@ -32,10 +32,10 @@ export const useBudgetStore = defineStore("budget", {
             }
         },
 
-        async updateBudget(budgetId, updatedData) {
+        async updateBudget(updatedData) {
             try {
-                const updatedBudget = await budgetService.updateBudget(budgetId, updatedData);
-                const index = this.budgets.findIndex(b => b.id === budgetId);
+                const updatedBudget = await budgetService.updateBudget(updatedData.id, updatedData);
+                const index = this.budgets.findIndex(b => b.id === updatedData.id);
                 if (index !== -1) {
                     this.budgets[index] = updatedBudget;
                 }

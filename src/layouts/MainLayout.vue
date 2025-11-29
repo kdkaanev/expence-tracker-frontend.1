@@ -3,17 +3,18 @@ import NavBar from "../components/NavBar.vue";
 import SideBar from "../components/SideBar.vue";
 import { onMounted } from "vue"
 import { useAuthStore } from "../store/authStore.js"
-
+import  { useRouter } from "vue-router";
 import { useBudgetStore } from "../store/budgetStore.js"
 import { useTransactionStore } from "../store/transactionsStore.js"
 const authStore = useAuthStore();
 const budgetStore = useBudgetStore();
 const transactionStore = useTransactionStore();
 
-
+const router = useRouter()
 onMounted(async () => {
-   authStore.fetchCurrentUser()
-   budgetStore.fetchBudgets()
+    
+    authStore.fetchCurrentUser()
+    budgetStore.fetchBudgets()
     transactionStore.fetchTransactions()
 });
 </script>

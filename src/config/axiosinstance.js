@@ -3,9 +3,9 @@ import axios from "axios"
 const baseURL = "/api";
 const axiosET = axios.create({
     
-    baseURL: 'https://expene-gnfgb0daa0eqfkbr.northeurope-01.azurewebsites.net',
+    //baseURL: 'https://expene-gnfgb0daa0eqfkbr.northeurope-01.azurewebsites.net',
     //baseURL: baseURL,
-    //baseURL: 'http://127.0.0.1:8000/',
+    baseURL: 'http://127.0.0.1:8000/',
     
     headers: { "Content-Type": "application/json" },
 })

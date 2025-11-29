@@ -40,7 +40,7 @@ export const useCategoryStore = defineStore('category', {
         },
         async deleteCategory(categoryId) {
             try {
-                await axiosET.delete(`/categories/${categoryId}`);
+                await axiosET.delete(`api/categories/${categoryId}/`);
                 this.categories = this.categories.filter(cat => cat.id !== categoryId);
             } catch (error) {
                 console.error('Error deleting category:', error);

@@ -5,7 +5,7 @@ import DonuutChart from '../components/charts/DonuutChart.vue';
 import Button from '../components/ui/Button.vue';
 import BarChart from '../components/charts/BarChart.vue';
 import HorizontalBar from '../components/charts/HorizontalBar.vue';
-import { computed, onMounted, watchEffect } from 'vue';
+import { computed, nextTick, onMounted, watchEffect } from 'vue';
 import { useBudgetStore } from '../store/budgetStore';
 import { ref } from 'vue';
 import { useTransactionStore } from '../store/transactionsStore';
@@ -20,12 +20,13 @@ const addFormRef = ref(null);
 const chartColors = ref([]);
 const { budgets } = storeToRefs(budgetStore);
 const { daysOfMonth, dailyExpenses } = storeToRefs(transactionStore);
-
+const editMode = ref(false);
 const showModal = ref(false);
 
-
+const budget = budgetStore.budgets;
 
 const formBudget = ref({
+    id: null,
     category: '',
     amount: 0,
 });
@@ -38,7 +39,17 @@ onMounted(async() => {
 
 
 
+const openEditModal = (budget) => {
+        editMode.value = true;
+        formBudget.value = {
+            id: budget.id,
+            category: budget.category,
+            amount: budget.amount,
+        };
+        showModal.value = true;
+    };  
 const openModal = async() => {
+        editMode.value = false;
     formBudget.value = {
         category: '',
         amount: 0,
@@ -56,15 +67,12 @@ const closeModal = () => {
 
 
 const addBudget = async() => {
-        if (formBudget.value.category && formBudget.value.amount > 0) {
-            await budgetStore.addBudget({
-                category: formBudget.value.category,
-                amount: formBudget.value.amount,
-            });
-            closeModal();
+        if (editMode.value) {
+            await budgetStore.updateBudget(formBudget.value);
         } else {
-            alert('Please fill in all fields correctly.');
+            await budgetStore.addBudget(formBudget.value);
         }
+        closeModal();
     };
         function getIcon(categoryName) {
       return categoryIcons[categoryName] || "tag"; // по подразбиране tag
@@ -139,6 +147,17 @@ const chartData = computed(() => ({
         let total = budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
         return `$${total.toFixed(2)}`;
     });
+
+    const deleteBudget = async(id) => {
+        if (confirm('Are you sure you want to delete this budget?')) {
+            await budgetStore.deleteBudget(id);
+        }
+    };
+    nextTick(() => {
+        if (addFormRef.value) {
+            addFormRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 </script>
 
 <template>
@@ -179,7 +198,11 @@ const chartData = computed(() => ({
                                 <p>${{ item.spent }}</p>
                                 <p>${{ item.amount }}</p>
                             </div>
-                            
+                             <div class="buttons">
+                        <button class="transparant" @click="openEditModal(item)">✏️</button>
+                        <button class="transparant" @click="deleteBudget(item.id)">🗑️</button>
+                        
+                    </div>
                         </div>
                     </div>
                 </section>
@@ -194,7 +217,7 @@ const chartData = computed(() => ({
                 <section v-if="showModal" ref="addFormRef" class="card">
                     <div class="modal-content">
                         <span class="close" @click="closeModal">&times;</span>
-                        <h2>Add New Budget</h2>
+                        <h2>{{ editMode ? 'Edit Budget' : 'Add Budget' }}</h2>
                         <form @submit.prevent="addBudget">
                             <div class="form-group">
                                 <label for="category">Category</label>
@@ -205,7 +228,7 @@ const chartData = computed(() => ({
                                 <label for="amount">Enter Budget</label> 
                                 <input type="number" v-model.number="formBudget.amount" id="amount" min="1" required />
                         </div>
-                            <Button class="btn" type="submit" variant="success">Add Budget</Button>
+                            <Button class="btn" type="submit" variant="success">{{ editMode ? 'Update Budget' : 'Add Budget' }}</Button>
                         </form>
                     </div>  
                     </section>
@@ -306,6 +329,19 @@ const chartData = computed(() => ({
 .btn{
     margin-top: 1rem;
     width: 100%;
+}
+.transparant{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    
+   
+}.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 </style>

@@ -195,7 +195,7 @@
 
         
                 
-            <div  class="donut">
+            <div  v-if="totalBudgets > 0" class="donut">
                   <DonuutChart
                     :chart-data="chartData"
                     :center-text="{
