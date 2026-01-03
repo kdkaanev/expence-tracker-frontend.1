@@ -49,12 +49,12 @@ const onLogin = async () => {
 <template>
  <article>
    <section class="container">
-      <h1>Login</h1>
-      <p>Welcome back!Please login to your account.</p>
+      <h1>Вход</h1>
+      <p>Добре дошли отново! Моля, влезте в профила си.</p>
 
       <form @submit.prevent="!loading && onLogin()">
-        <Inputs type="email" v-model="email" placeholder="Enter your email"  />
-        <Inputs type="password" v-model="password" placeholder="Enter your password" icon="fas fa-lock" />
+        <Inputs type="email" v-model="email" placeholder="Въведете вашия имейл"  />
+        <Inputs type="password" v-model="password" placeholder="Въведете вашата парола" icon="fas fa-lock" />
         <Button 
           variant="primary"
           class="btn-login" 
@@ -90,9 +90,9 @@ const onLogin = async () => {
 </svg>
 
           </span>
-          <span v-else>Login</span>
+          <span v-else>Вход</span>
       </Button>
-      <p>Don't have an account?<a href="/auth/register">Register</a></p>
+      <p>Нямате акаунт?<a href="/auth/register">Регистрация</a></p>
        
 
       </form>

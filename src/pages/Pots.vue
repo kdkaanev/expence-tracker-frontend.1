@@ -76,7 +76,7 @@
         showAddFundsModal.value = true;
         
 
-        alert(`Open add funds modal for pot: ${pot.pot}`);
+        alert(`Open add funds modal for pot: €{pot.pot}`);
     };
 
 
@@ -87,7 +87,7 @@
             withdrawAmount: 0
         };
         showWithdrawFundsModal.value = true;
-        alert(`Open withdraw funds modal for pot: ${pot.pot}`);
+        alert(`Open withdraw funds modal for pot: €{pot.pot}`);
     };
     const submitForm = async () => {
         if (editMode.value) {
@@ -99,7 +99,7 @@
     };
     const deletePot = async (potId) => {
 
-        if (!confirm('Are you sure you want to delete this pot?')) {
+        if (!confirm('Сигурни ли сте, че искате да изтриете тази касичка?')) {
             return;
         }
         await potsStore.deletePot(potId);
@@ -107,7 +107,7 @@
     const addFunds = async () => {
         const amount = parseFloat(document.getElementById('addAmount').value);
         if (isNaN(amount) || amount <= 0) {
-            alert('Please enter a valid amount to add.');
+            alert('Моля, въведете валидна сума за добавяне.');
             return;
         }
         await potsStore.addMoneyToPot(formAddFunds.value.id, { amount });
@@ -146,20 +146,20 @@
         <Button variant="primary" 
         class="btn-add"
         @click="openAddPotModal"
-        >Add New Pot</Button>
+        >+ Добави касичка</Button>
         <form @submit.prevent="submitForm" v-if="showModal" ref="formPotRef">
            
             <!-- Modal content for adding/editing pot would go here -->
            
              <span class="close" @click="closeModal">&times;</span>
-             <h2>{{ editMode ? 'Edit Pot' : 'Add Pot' }}</h2>
-                <label for="pot">Pot Name:</label>
+             <h2>{{ editMode ? 'Редактирай касичка' : 'Добави касичка' }}</h2>
+                <label for="pot">Име на касичка:</label>
                 <input v-model="formPot.pot" id="pot" required />
 
-                <label for="goal">Goal Amount:</label>
+                <label for="goal">Целева сума:</label>
                 <input v-model.number="formPot.goal" id="goal" type="number" required />
 
-                <Button variant="primary" type="submit">{{ editMode ? 'Update Pot' : 'Add Pot' }}</Button>
+                <Button variant="primary" type="submit">{{ editMode ? 'Актуализирай касичка' : 'Добави касичка' }}</Button>
 
                 
 
@@ -167,26 +167,26 @@
              <form @submit.prevent="addFunds" v-if="showAddFundsModal">
                 <!-- Modal content for adding funds would go here -->
                 <span class="close" @click="closeModal">&times;</span>
-                <h2>Add Funds to {{ formPot.pot }}</h2>
-                <label  for="addAmount">Amount to Add:</label>
+                <h2>Добави средства към {{ formPot.pot }}</h2>
+                <label  for="addAmount">Сума за добавяне:</label>
                 <input v-model="formPot" id="addAmount" type="number" required />
-                <Button variant="primary" type="submit">Add Funds</Button>
+                <Button variant="primary" type="submit">Добави средства</Button>
             </form>
 
             <form @submit.prevent="withdrawFunds" v-if="showWithdrawFundsModal">
                 <!-- Modal content for withdrawing funds would go here -->
                 <span class="close" @click="closeModal">&times;</span>
-                <h2>Withdraw Funds from {{ formPot.pot }}</h2>
-                <label for="withdrawAmount">Amount to Withdraw:</label>
+                <h2>Изтегли средства от {{ formPot.pot }}</h2>
+                <label for="withdrawAmount">Сума за изтегляне:</label>
                 <input v-model="formPot" id="withdrawAmount" type="number" required />
-                <Button variant="primary" type="submit">Withdraw Funds</Button>
+                <Button variant="primary" type="submit">Изтегли средства</Button>
             </form>
         
         <section class="container">
             <div class="grid">
                 <div v-for="item in potsData" :key="item.id" class="pot-card">
                     <h3>{{ item.pot }}</h3>
-                    <p>${{ item.saved }} / ${{ item.goal }}</p>
+                    <p>€{{ item.saved }} / €{{ item.goal }}</p>
                     <div class="buttons">
                         <button class="transparant" @click="openEditModal(item)">✏️</button>
                         <button class="transparant" @click="deletePot(item.id)">🗑️</button>
@@ -199,7 +199,7 @@
                         :total="Number(item.goal)"
                         mode="pot"
                     />
-                    <p>{{ potStatus(item.pot).remaining }} remaining</p>
+                    <p>€{{ potStatus(item.pot).remaining }} оставащи</p>
 
                  
                     

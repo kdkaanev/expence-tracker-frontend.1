@@ -151,7 +151,7 @@ const filteredTransactions = computed(() => {
     };
 
     const deleteTransaction = async (id) => {
-        if (confirm("Are you sure you want to delete this transaction?")) {
+        if (confirm("Сигурни ли сте, че искате да изтриете тази транзакция?")) {
            await transactionStore.deleteTransaction(id);
         }
     };
@@ -163,7 +163,7 @@ const filteredTransactions = computed(() => {
     
     const addCategory = async () => {
         if (!newCategoryName.value) {
-            alert("Category name cannot be empty.");
+            alert("Моля, въведете име на категорията.");
             return;
         }
         if (isSubmitting.value) return;
@@ -239,27 +239,27 @@ const filteredTransactions = computed(() => {
                   <Button class="btn-add"
                 variant="primary"
                 @click="openAddModal"
-            >Add Transaction
+            >+ Добави транзакция
         </Button>
         <section v-if="showModal" class="modal" ref="addFormRef">
                 <div class="modal-content">
                     <span class="close" @click="closeModal">&times;</span>
-                    <h2>{{ editMode ? 'Edit Transaction' : 'Add Transaction' }}</h2>
-                  <label>Description:</label>
-                    <input type="text" v-model="formData.description" placeholder="Description" />
-                    <label>Date:</label>
+                    <h2>{{ editMode ? 'Редактирай транзакция' : 'Добави транзакция' }}</h2>
+                  <label>Описание:</label>
+                    <input type="text" v-model="formData.description" placeholder="Описание" />
+                    <label>Дата:</label>
                    <input type="date" v-model="formData.transaction_date" />
-                   <label>Amount:</label>
-                   <input type="number" v-model="formData.amount" placeholder="Amount" />
-                    <label >Transaction Type:</label>
+                   <label>Сума:</label>
+                   <input type="number" v-model="formData.amount" placeholder="Сума" />
+                    <label >Тип транзакция:</label>
                    <select v-model="formData.type">
-                        <option disabled value="">Select </option>
-                       <option value="income">Income</option>
-                       <option value="expense">Expense</option>
+                        <option disabled value="">Избери </option>
+                       <option value="income">Приход</option>
+                       <option value="expense">Разход</option>
                    </select>
-                     <label>Category:</label>
+                     <label>Категория:</label>
                      <select v-model="formData.category">
-                        <option disabled value="">Select Category</option>
+                        <option disabled value="">Избери категория</option>
                         
                        
                           <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
@@ -267,30 +267,30 @@ const filteredTransactions = computed(() => {
                           </option>
                           <option
                               value="__add__"
-                          >+ Add New Category
+                          >+ Добави категория
                           </option>
                           <option value="__delete__">
-                                🗑️ Delete Category
+                                🗑️ Изтрий категория
                           </option>
                           
                      </select>
                  
                      <div class="btn">
-                        <Button variant="primary" @click="saveTransaction">Save</Button>
-                        <Button variant="secondary" @click="closeModal">Cancel</Button>
+                        <Button variant="primary" @click="saveTransaction">Запази</Button>
+                        <Button variant="secondary" @click="closeModal">Отказ</Button>
                      </div>
                      <div v-if="showCategoryModal" class="modal-category" ref="categoryModalRef">
                          
                         <!-- Category Modal Content Here -->
                          <div class="modal-content">
                             <span class="close" @click="showCategoryModal=false">&times;</span>
-                            <h2>Add New Category</h2>
+                            <h2>Добави категория</h2>
                             <input type="text" v-model="newCategoryName" placeholder="Category Name" />
                             
                         
                             <div class="btn">
-                                <Button variant="primary" @click="addCategory">Add Category</Button>
-                                <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
+                                <Button variant="primary" @click="addCategory">Добави</Button>
+                                <Button variant="secondary" @click="showCategoryModal = false">Отказ</Button>
                             </div>
                          </div>
                         
@@ -301,17 +301,17 @@ const filteredTransactions = computed(() => {
                             <!-- Delete Category Modal Content Here -->
                             <div class="modal-content">
                                 <span class="close" @click="openDeleteCategoryModal=false">&times;</span>
-                                <h2>Delete Category</h2>
-                                <p>Select a category to delete:</p>
+                                <h2>Изтрий категория</h2>
+                                <p>Избери категория за изтриване:</p>
                                 <select v-model="categoryToDelete">
-                                    <option disabled value="">Select Category</option>
+                                    <option disabled value="">Избери категория</option>
                                     <option class="capitalize" v-for="category in categoryStore.categories" :key="category.id" :value="category.id">
                                         {{ category.name }}
                                     </option>
                                 </select>
                                 <div class="btn">
-                                    <Button variant="primary" @click="deleteCategory(categoryToDelete)">Delete Category</Button>
-                                    <Button variant="secondary" @click="showCategoryModal = false">Cancel</Button>
+                                    <Button variant="primary" @click="deleteCategory(categoryToDelete)">Изтрий категория</Button>
+                                    <Button variant="secondary" @click="showCategoryModal = false">Отказ</Button>
                                 </div>
                             </div>
                             
@@ -319,17 +319,17 @@ const filteredTransactions = computed(() => {
                 </div>
             </section>  
 
-<h1 class="text">Transactions</h1>
+<h1 class="text">Транзакции</h1>
             <table class="table">
                 
                 <thead class="thead">
                     <tr>
                         
-                        <th class="th-text">Category</th>
-                        <th class="th-text">Date</th>
-                        <th class="th-text">Description</th>
-                        <th class="th-text">Amount</th>
-                        <th class="th-text">Edit/Delete</th>
+                        <th class="th-text">Категория</th>
+                        <th class="th-text">Дата</th>
+                        <th class="th-text">Описание</th>
+                        <th class="th-text">Сума</th>
+                        <th class="th-text">Редактирай/Изтрий</th>
                      
                        
                      
@@ -349,7 +349,7 @@ const filteredTransactions = computed(() => {
 
                       <td>
                         <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) , 'positive': positiveTransactions.includes(transaction) }">
-                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}${{ Math.abs(transaction.amount).toFixed(2) }}
+                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}€{{ Math.abs(transaction.amount).toFixed(2) }}
                     </span>
                 </td>
                        

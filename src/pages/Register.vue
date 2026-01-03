@@ -22,12 +22,12 @@
         formData.value.password = password.value
         formData.value.re_password = re_password.value
         if(formData.value.password !== formData.value.re_password){
-            alert("Passwords do not match")
+            alert("Паролите не съвпадат")
             return
         }
         try {
          await authStore.register(formData.value);
-          alert("Registered")
+          alert("Регистрацията е успешна")
 
           email.value = ""
           password.value = ""
@@ -35,7 +35,7 @@
 
 
         }catch (error) {
-          alert("Registration failed")
+          alert("Регистрацията не бе успешна. Моля, опитайте отново.")
         }
         if (authStore.isAuthenticated){
             router.push("/")
@@ -53,15 +53,15 @@
         <div class="icon">
             <i class="fa-solid fa-user" style="color: #2D9CDB;" ></i>
         </div>
-        <h1>Register</h1>
-        <p>Create your account</p>
+        <h1>Регистрация</h1>
+        <p>Създайте своя акаунт</p>
     
         <form @submit.prevent="onRegister">
-            <Inputs type="email" v-model="email" placeholder="Email" icon="fas fa-envelope" />
-            <Inputs type="password" v-model="password" placeholder="Password" icon="fas fa-lock" />
-            <Inputs type="password" v-model="re_password" placeholder="Confirm Password" icon="fas fa-lock" />
-            <Button variant="primary" class="btn-login" type="submit">Register</Button>
-            <p>Already have an account?<a href="/auth/login">Login</a></p>
+            <Inputs type="email" v-model="email" placeholder="Имейл" icon="fas fa-envelope" />
+            <Inputs type="password" v-model="password" placeholder="Парола" icon="fas fa-lock" />
+            <Inputs type="password" v-model="re_password" placeholder="Потвърдете паролата" icon="fas fa-lock" />
+            <Button variant="primary" class="btn-login" type="submit">Регистрация</Button>
+            <p>Вече имате акаунт?<a href="/auth/login">Вход</a></p>
         </form>
     </section>
     </article>

@@ -82,7 +82,7 @@
     });
 
   const chartData = computed(() => ({
-    labels: ['Spent', 'Remaining Budget'],
+    labels: ['Похарчено', 'Оставащ бюджет'],
     datasets: [
       {
         data: [spentFromBudgets.value, remainingBudget.value],
@@ -113,7 +113,7 @@
             },
             title: {
                 display: true,
-                text: 'Daily Expenses',
+                text: 'Дневни разходи',
             },
         },
         scales: {
@@ -156,26 +156,26 @@
         <article class="container">
              
            <section class="title">
-            <h1 v-if="firstName">Welcome, {{ firstName }}</h1>
-            <h1 v-else>Welcome, {{ authStore.user.email }}</h1>
-            <p>your financial review for {{ currentMonth }}.</p>
+            <h1 v-if="firstName">Здравей, {{ firstName }}</h1>
+            <h1 v-else>Добре дошъл, {{ authStore.user.email }}</h1>
+            <p>твоят финансов преглед за {{ currentMonth }}.</p>
            </section>
            <div class="info">
             <section class="card odd">
-                <h2>Total Balance</h2>
-                <p>${{ balance }}</p>
+                <h2>Общ баланс</h2>
+                <p>€&ensp;{{ balance }}</p>
             </section>
             <section class="card even">
-                <h2>Income this month</h2>
-                <p>${{ totalIncomingThisMonth }}</p>
+                <h2>Приходи този месец</h2>
+                <p>€&ensp;{{ totalIncomingThisMonth }}</p>
             </section>
             <section class="card even">
-                <h2>Expenses this month</h2>
-                <p>${{ totalOutgoingThisMonth }}</p>
+                <h2>Разходи този месец</h2>
+                <p>€&ensp;{{ totalOutgoingThisMonth }}</p>
             </section>
             <section class="card odd">
-                <h2>Saving</h2>
-                <p>${{ balanceThisMonth }}</p>
+                <h2>Спестявания</h2>
+                <p>€&ensp;{{ balanceThisMonth }}</p>
             </section>
            
            </div>
@@ -189,8 +189,8 @@
             </div>
             
             <div class="mode-view budget">
-                <h2>Budget Overview {{ totalBudgets }}</h2>
-                <h2 @click="goToBudgets" class="see-all">See Budgets</h2>
+                <h2>Общ бюджет: {{ totalBudgets }}</h2>
+                <h2 @click="goToBudgets" class="see-all">Виж Бюджети</h2>
             </div>
 
         
@@ -200,8 +200,8 @@
                     :chart-data="chartData"
                     :center-text="{
                       lines: [
-                        { text: `$${totalBudgets}`, fontSize: 20, color: '#333' },
-                        { text: `Remaining: $${remainingBudget}`, fontSize: 14, color: remainingBudget < 0 ? 'red' : '#666' },
+                        { text: `€${totalBudgets}`, fontSize: 20, color: '#333' },
+                        { text: `Оставащ: €${remainingBudget}`, fontSize: 14, color: remainingBudget < 0 ? 'red' : '#666' },
                       ],
                       
                     }"
@@ -215,8 +215,8 @@
            </section>
            <section class="transactions">
             <div class="mode-view">
-                <h2>Last Transactions</h2>
-                <h2 @click="goToAllTransactions" class="see-all">See All</h2>
+                <h2>Последни транзакции</h2>
+                <h2 @click="goToAllTransactions" class="see-all">Виж всички</h2>
             </div>
               <tbody>
                    <tr v-for="transaction in lastThreeTransactions" :key="transaction.id">
@@ -232,7 +232,7 @@
 
                       <td> 
                         <span class="amount" :class="{ 'negative': negativeTransactions.includes(transaction) , 'positive': positiveTransactions.includes(transaction) }">
-                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}${{ Math.abs(transaction.amount).toFixed(2) }}
+                        {{ negativeTransactions.includes(transaction) ? '-' : '+' }}€&ensp;{{ Math.abs(transaction.amount).toFixed(2) }}
                     </span>
                       </td>
                        

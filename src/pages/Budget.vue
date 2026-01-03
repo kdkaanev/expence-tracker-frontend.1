@@ -145,7 +145,7 @@ const chartData = computed(() => ({
     };
     const totalBudget = computed(() => {
         let total = budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
-        return `$${total.toFixed(2)}`;
+        return `€${total.toFixed(2)}`;
     });
 
     const deleteBudget = async(id) => {
@@ -162,7 +162,7 @@ const chartData = computed(() => ({
 
 <template>
     <article>
-        <h1>Budgets</h1>
+        <h1>Бюджети</h1>
         <section class="container">
             
             <div class="leftside">
@@ -173,7 +173,7 @@ const chartData = computed(() => ({
                     
                     />
                     <div class="summary">
-                        <p>Total Budget</p>
+                        <p>Общ бюджет</p>
                         <h3>{{ totalBudget }}</h3>
                     </div>
                 </section>
@@ -195,8 +195,8 @@ const chartData = computed(() => ({
                             />
 
                             <div class="summ">
-                                <p>${{ item.spent }}</p>
-                                <p>${{ item.amount }}</p>
+                                <p>€{{ item.spent }}</p>
+                                <p>€{{ item.amount }}</p>
                             </div>
                              <div class="buttons">
                         <button class="transparant" @click="openEditModal(item)">✏️</button>
@@ -212,23 +212,23 @@ const chartData = computed(() => ({
                 variant="primary"
                 @click="openModal"
                 >
-                + Add Budget
+                + Добави бюджет
                 </Button>
                 <section v-if="showModal" ref="addFormRef" class="card">
                     <div class="modal-content">
                         <span class="close" @click="closeModal">&times;</span>
-                        <h2>{{ editMode ? 'Edit Budget' : 'Add Budget' }}</h2>
+                        <h2>{{ editMode ? 'Редактирай бюджет' : 'Добави бюджет' }}</h2>
                         <form @submit.prevent="addBudget">
                             <div class="form-group">
-                                <label for="category">Category</label>
+                                <label for="category">Категория</label>
                                 <select v-model="formBudget.category" id="category" required>
-                                    <option value="" disabled>Select Category</option>
+                                    <option value="" disabled>Избери категория</option>
                                     <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                                 </select>  
-                                <label for="amount">Enter Budget</label> 
+                                <label for="amount">Въведи бюджет</label> 
                                 <input type="number" v-model.number="formBudget.amount" id="amount" min="1" required />
                         </div>
-                            <Button class="btn" type="submit" variant="success">{{ editMode ? 'Update Budget' : 'Add Budget' }}</Button>
+                            <Button class="btn" type="submit" variant="success">{{ editMode ? 'Актуализирай бюджет' : 'Добави бюджет' }}</Button>
                         </form>
                     </div>  
                     </section>

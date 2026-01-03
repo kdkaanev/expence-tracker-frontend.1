@@ -162,7 +162,7 @@ const getFirstLetter = (str = '') => (str && str.length ? String(str).charAt(0).
         role="dialog"
         aria-modal="false"
       >
-        <Profile />
+        <Профил />
       </div>
     </transition>
 
@@ -170,22 +170,22 @@ const getFirstLetter = (str = '') => (str && str.length ? String(str).charAt(0).
     <nav class="menu" v-if="!isMobile" aria-label="Primary">
       <router-link to="/" class="link" :class="{ active: isActive('/') }">
         <span class="icon"><FontAwesomeIcon :icon="faGrip" /></span>
-        <span class="text">Dashboard</span>
+        <span class="text">Табло</span>
       </router-link>
 
       <router-link to="/transactions" class="link" :class="{ active: isActive('/transactions') }">
         <span class="icon"><FontAwesomeIcon :icon="faList" /></span>
-        <span class="text">Transactions</span>
+        <span class="text">Транзакции</span>
       </router-link>
 
       <router-link to="/budget" class="link" :class="{ active: isActive('/budget') }">
         <span class="icon"><FontAwesomeIcon :icon="faWallet" /></span>
-        <span class="text">Budget</span>
+        <span class="text">Бюджет</span>
       </router-link>
 
       <router-link to="/pots" class="link" :class="{ active: isActive('/pots') }">
         <span class="icon"><FontAwesomeIcon :icon="faPiggyBank" /></span>
-        <span class="text">Pots</span>
+        <span class="text">Касички</span>
       </router-link>
     </nav>
 

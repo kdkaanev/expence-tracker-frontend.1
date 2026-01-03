@@ -29,21 +29,21 @@ watch([localCategory, localStartOfDay, localEndOfDay], () => {
 
 <template>
     <div class="filter">
-      <h3>Filter Transactions</h3>
+      <h3>Филтрирай транзакции</h3>
         <select v-model="localCategory">
-            <option value="">All Categories</option>
+            <option value="">Всички категории</option>
             <option v-for="category in categories" :key="category.id" :value="category.id" class="capitalize">
             {{ category.name}}
             </option>
         </select>
-        <label for="">from day</label>
+        <label for="">от дата</label>
         <input
       
             type="date"
             v-model="localStartOfDay"
             :placeholder="new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: '2-digit', day: '2-digit' })"
         />
-        <label for="">to day</label>
+        <label for="">до дата</label>
         <input
             type="date"
             v-model="localEndOfDay"

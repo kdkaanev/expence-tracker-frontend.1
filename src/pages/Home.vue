@@ -21,49 +21,49 @@ function goToRegister() {
       <div class="header">
 
         <div class="header-left">
-          <h1 class="title">Manage your finances easily</h1>
-          <p class="subtitle">Track your expenses, set budget</p>
+          <h1 class="title">Управлявай финансите си лесно</h1>
+          <p class="subtitle">Проследявай разходите си, поставяй бюджети</p>
         </div>
         <img src="../assets/logo-finance.png" alt="Finance Illustration" class="illustration"/>
 
       </div>
       <div class="btn-first">
        <Button variant="primary" @click="goToRegister">
-  Sign Up
+  Регистрация
 </Button>
 
         <Button variant="secondary" @click="goToLogin">
-  Login
+  Вход
 </Button>
       </div>
       <section class="content">
 
-        <h3 class="title">Features</h3>
+        <h3 class="title">Функции</h3>
         <div class="grid">
           <div class="grid-left">
             <div class="card">
               <img src="../assets/newspaper-solid-full.svg" alt="Finance Illustration" class="page"/>
-              <p class="card-description">Track expenses in real time</p>
+              <p class="card-description">Проследявай разходите си в реално време</p>
             </div>
             <div class="card">
               <img src="../assets/bullseye-solid-full.svg" alt="Finance Illustration" class="page"/>
-              <p class="card-description">Set budgets and goals</p>
+              <p class="card-description">Поставяй бюджети и цели</p>
             </div>
           </div>
           <div class="grid-right">
             <div class="card">
               <img src="../assets/square-poll-vertical-solid-full.svg" alt="Finance Illustration" class="page"/>
-              <p class="card-description">Get clear charts and analyses</p>
+              <p class="card-description">Виж ясни графики и анализи</p>
             </div>
             <div class="card">
               <img src="../assets/piggy-bank-solid-full.svg" alt="Finance Illustration" class="page"/>
-              <p class="card-description">Save with Pots</p>
+              <p class="card-description">Спестявай с Касички</p>
             </div>
           </div>
         </div>
         <div class="btn-second">
-          <Button variant="primary" @click="goToRegister">Get started for free</Button>
-          <Button variant="secondary" @click="goToLogin" >Login</Button>
+          <Button variant="primary" @click="goToRegister">Започни безплатно</Button>
+          <Button variant="secondary" @click="goToLogin" >Вход</Button>
 
         </div>
 

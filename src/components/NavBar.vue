@@ -53,16 +53,16 @@ onBeforeUnmount(() => {
             ref="popupRef"
            
             >
-            <Profile />     
+            <Профил />     
         </div>
         <div class="a">Hay</div>
         
             <nav class="menu">
                 
-                    <router-link to="/" class="link"><span class="icon"><FontAwesomeIcon :icon="faGrip" /></span>Dashboard</router-link>
-                    <router-link to="/transactions" class="link"><span class="icon"><FontAwesomeIcon :icon="faList" /></span>Transactions</router-link>
-                    <router-link to="/budget" class="link"><span class="icon"><FontAwesomeIcon :icon="faWallet" /></span>Budget</router-link>
-                    <router-link to="/pots" class="link"><span class="icon"><FontAwesomeIcon :icon="faPiggyBank" /></span>Pots</router-link>
+                    <router-link to="/" class="link"><span class="icon"><FontAwesomeIcon :icon="faGrip" /></span>Табло</router-link>
+                    <router-link to="/transactions" class="link"><span class="icon"><FontAwesomeIcon :icon="faList" /></span>Транзакции</router-link>
+                    <router-link to="/budget" class="link"><span class="icon"><FontAwesomeIcon :icon="faWallet" /></span>Бюджет</router-link>
+                    <router-link to="/pots" class="link"><span class="icon"><FontAwesomeIcon :icon="faPiggyBank" /></span>Касички</router-link>
 
 
             </nav>
