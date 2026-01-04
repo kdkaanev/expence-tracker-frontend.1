@@ -162,7 +162,7 @@ const getFirstLetter = (str = '') => (str && str.length ? String(str).charAt(0).
         role="dialog"
         aria-modal="false"
       >
-        <Профил />
+        <Profile />
       </div>
     </transition>
 
