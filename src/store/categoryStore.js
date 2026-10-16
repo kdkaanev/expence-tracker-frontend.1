@@ -29,7 +29,7 @@ export const useCategoryStore = defineStore('category', {
         },
         async updateCategory(categoryId, updatedData) {
             try {
-                const response = await axiosET.put(`/categories/${categoryId}`, updatedData);
+                const response = await axiosET.put(`/api/categories/${categoryId}`, updatedData);
                 const index = this.categories.findIndex(cat => cat.id === categoryId);
                 if (index !== -1) {
                     this.categories[index] = response.data;

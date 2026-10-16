@@ -1,12 +1,7 @@
 import axios from "axios"
 
-const baseURL = "/api";
 const axiosET = axios.create({
-    
-    baseURL: 'https://expence-epcwcbdwemaed5fj.northeurope-01.azurewebsites.net',
-    //baseURL: baseURL,
-    //baseURL: 'http://127.0.0.1:8000/',
-    
+    baseURL: import.meta.env.VITE_API_BASE_URL || window.location.origin,
     headers: { "Content-Type": "application/json" },
 })
 
@@ -46,14 +41,14 @@ axiosET.interceptors.response.use(
       if (!refresh) return Promise.reject(error)
 
       try {
-        const res = await axiosET.post("api/auth/jwt/refresh/", { refresh })
+        const res = await axiosET.post("/api/auth/jwt/refresh/", { refresh })
         const newAccess = res.data.access
         localStorage.setItem("access", newAccess)
         originalRequest.headers.Authorization = `Bearer ${newAccess}`
         return axiosET(originalRequest)
       } catch (refreshError) {
-        localStorage.removeItem("access", newAccess)
-        localStorage.removeItem("refresh", refresh)
+        localStorage.removeItem("access")
+        localStorage.removeItem("refresh")
         return Promise.reject(refreshError)
       }
     }
