@@ -1,4 +1,5 @@
 <script setup>
+import { isSameMonth, parseISO } from 'date-fns';
 import { categoryIcons } from '../services/categoryIcons';
 import DonuutChart from '../components/charts/DonuutChart.vue';
 
@@ -131,17 +132,28 @@ const chartData = computed(() => ({
     };
     
 
-    const budgetStatus = (category) => {
-        const budget = budgetStore.budgets.find(b => b.category === category);
-        if (budget) {
-         
-            let used = ((Number(budget.spent) / Number(budget.amount)) * 100).toFixed(0);
-            used = Number(used);
-            return { used: used > 100 ? 100 : used, remaining: budget.amount - budget.spent };
+    const spentForCategory = (categoryId) => {
+        const now = new Date();
+        return transactionStore.transactions
+            .filter(transaction => {
+                if (transaction.type !== 'expense' || Number(transaction.category) !== Number(categoryId) || !transaction.transaction_date) {
+                    return false;
+                }
+                return isSameMonth(parseISO(transaction.transaction_date), now);
+            })
+            .reduce((sum, transaction) => sum + Number(transaction.amount), 0);
+    };
+
+    const budgetStatus = (categoryId) => {
+        const budget = budgetStore.budgets.find(item => Number(item.category) === Number(categoryId));
+        if (!budget) {
+            return { used: 0, remaining: 0 };
         }
-        console.log(used, remaining);
-        
-        return { used: 0, remaining: 0 };
+
+        const spent = spentForCategory(categoryId);
+        const amount = Number(budget.amount);
+        const used = amount > 0 ? Math.round((spent / amount) * 100) : 0;
+        return { used: Math.min(used, 100), remaining: amount - spent };
     };
     const totalBudget = computed(() => {
         let total = budgetStore.budgets.reduce((sum, b) => sum + Number(b.amount), 0);
@@ -195,7 +207,7 @@ const chartData = computed(() => ({
                             />
 
                             <div class="summ">
-                                <p>€{{ item.spent }}</p>
+                                <p>€{{ spentForCategory(item.category).toFixed(2) }}</p>
                                 <p>€{{ item.amount }}</p>
                             </div>
                              <div class="buttons">
@@ -345,4 +357,3 @@ const chartData = computed(() => ({
 }
 
 </style>
-
