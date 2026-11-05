@@ -163,19 +163,19 @@
            <div class="info">
             <section class="card odd">
                 <h2>Общ баланс</h2>
-                <p>€&ensp;{{ balance }}</p>
+                <p>€&ensp;{{ balance.toFixed(2) }}</p>
             </section>
             <section class="card even">
                 <h2>Приходи този месец</h2>
-                <p>€&ensp;{{ totalIncomingThisMonth }}</p>
+                <p>€&ensp;{{ totalIncomingThisMonth.toFixed(2) }}</p>
             </section>
             <section class="card even">
                 <h2>Разходи този месец</h2>
-                <p>€&ensp;{{ totalOutgoingThisMonth }}</p>
+                <p>€&ensp;{{ totalOutgoingThisMonth.toFixed(2) }}</p>
             </section>
             <section class="card odd">
                 <h2>Спестявания</h2>
-                <p>€&ensp;{{ balanceThisMonth }}</p>
+                <p>€&ensp;{{ balanceThisMonth.toFixed(2) }}</p>
             </section>
            
            </div>
@@ -431,4 +431,3 @@ tr td {
 }
 }
 </style>
-
