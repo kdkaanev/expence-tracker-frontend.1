@@ -1,0 +1,40 @@
+name: Deploy Vue Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Dell Server
+    runs-on: [self-hosted, Linux, X64]
+
+    steps:
+      - name: Deploy Vue application
+        shell: bash
+        run: |
+          set -e
+
+          cd /home/kk/apps/expence-tracker/frontend
+
+          echo "Updating frontend from GitHub..."
+          git pull --ff-only origin main
+
+          echo "Installing dependencies..."
+          npm ci
+
+          echo "Building Vue application..."
+          npm run build
+
+          echo "Deploying files to Nginx..."
+          sudo -n /usr/local/bin/deploy-expense-frontend
+
+          echo "Deployment completed successfully!"
