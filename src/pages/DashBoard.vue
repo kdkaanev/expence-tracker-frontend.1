@@ -73,8 +73,8 @@
     });
   
     const spentFromBudgets = computed(() => {
-        return transactionStore.transactions
-            .filter(t => t.type === 'expense' && budgetStore.budgets.some(b => b.category_name === t.category_name))
+        return outgoingThisMonth.value
+            .filter(t => budgetStore.budgets.some(b => b.category_name === t.category_name))
             .reduce((sum, t) => sum + Number(t.amount), 0);
     });
     const remainingBudget = computed(() => {
