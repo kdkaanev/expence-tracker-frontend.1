@@ -133,10 +133,18 @@
             const progress = ((potInfo.saved / potInfo.goal) * 100).toFixed(0);
             return { progress: progress > 100 ? 100 : progress, remaining: potInfo.goal - potInfo.saved };
         }
+        const remaining = potInfo ? potInfo.goal - potInfo.saved : 0;
         if (remaining < 0) {
             return { progress: 100, remaining: 0 };
         }
         return { progress: 0, remaining: 0 };
+    };
+    const remaining = (pot) => {
+        const potInfo = potsData.value.find(p => p.pot === pot);
+        if (potInfo) {
+            return potInfo.goal - potInfo.saved;
+        }
+        return 0;
     };
 
 </script>
@@ -202,7 +210,8 @@
                         :total="Number(item.goal)"
                         mode="pot"
                     />
-                    <p>€{{ potStatus(item.pot).remaining }} оставащи</p>
+                    <p v-if="remaining(item.pot) > 0">€{{ remaining(item.pot) }} оставащи</p>
+                    <p v-else>Целта е постигната!</p>
 
                  
                     
