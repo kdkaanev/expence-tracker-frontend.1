@@ -133,6 +133,9 @@
             const progress = ((potInfo.saved / potInfo.goal) * 100).toFixed(0);
             return { progress: progress > 100 ? 100 : progress, remaining: potInfo.goal - potInfo.saved };
         }
+        if (remaining < 0) {
+            return { progress: 100, remaining: 0 };
+        }
         return { progress: 0, remaining: 0 };
     };
 
